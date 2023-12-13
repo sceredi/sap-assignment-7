@@ -1,0 +1,467 @@
+openapi: 3.0.3
+info:
+  title: EScootersManagementSystem microservices
+  description: The api of the EScootersManagementSystem
+  version: 0.1.0
+servers:
+  - url: http:localhost:8080
+tags:
+  - name: APIGateway
+    description: Operations about the API Gateway
+  - name: Users
+    description: Operations about the Users microservice
+  - name: EScooters
+    description: Operations about the EScooters microservice
+  - name: Rides
+    description: Operations about the Rides microservice
+paths:
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      description: ''
+      operationId: registerNewUser
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: id of the user
+          schema:
+            type: string
+        - name: userName
+          in: query
+          required: true
+          description: name of the user
+          schema:
+            type: string
+        - name: userSurname
+          in: query
+          required: true
+          description: surname of the user
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - userId
+                properties:
+                  userId:
+                    type: string
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Gets a user
+      description: ''
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: the id of the user
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - userId
+                  userName
+                  userSurname
+                properties:
+                  userId:
+                    type: string
+                  userName:
+                    type: string
+                  userSurname:
+                    type: string
+  /escooters:
+    post:
+      tags:
+        - EScooters
+      summary: Create a new EScooter
+      description: ''
+      operationId: registerNewEScooter
+      parameters:
+        - name: escooterId
+          in: query
+          required: true
+          description: id of the escooter
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - escooterId
+                properties:
+                  escooterId:
+                    type: string
+  /escooters/{escooterId}:
+    get:
+      tags:
+        - EScooters
+      summary: Gets an EScooter
+      description: ''
+      operationId: getEscooter
+      parameters:
+        - name: escooterId
+          in: path
+          required: true
+          description: the id of the escooter
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - escooterId
+                properties:
+                  escooterId:
+                    type: string
+  /rides:
+    post:
+      tags:
+        - Rides
+      summary: Create a new ride
+      description: ''
+      operationId: startNewRide
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: id of the user
+          schema:
+            type: string
+        - name: escooterId
+          in: query
+          required: true
+          description: id of the escooter
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - rideId
+                  userId
+                  escooterId
+                properties:
+                  rideId:
+                    type: string
+                  userId:
+                    type: string
+                  escooterId:
+                    type: string
+  /rides/{rideId}:
+    get:
+      tags:
+        - Rides
+      summary: Gets a ride
+      description: ''
+      operationId: getRide
+      parameters:
+        - name: rideId
+          in: path
+          required: true
+          description: the id of the ride
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - rideId
+                  userId
+                  escooterId
+                properties:
+                  rideId:
+                    type: string
+                  userId:
+                    type: string
+                  escooterId:
+                    type: string
+  /rides/{rideId}/end:
+    post:
+      tags:
+        - Rides
+      summary: End a ride
+      description: ''
+      operationId: endRide
+      parameters:
+        - name: rideId
+          in: path
+          required: true
+          description: the id of the ride
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - rideId
+                properties:
+                  rideId:
+                    type: string
+  /api/users:
+    post:
+      tags:
+        - APIGateway
+      summary: Create a new user
+      description: ''
+      operationId: registerNewUser
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: id of the user
+          schema:
+            type: string
+        - name: userName
+          in: query
+          required: true
+          description: name of the user
+          schema:
+            type: string
+        - name: userSurname
+          in: query
+          required: true
+          description: surname of the user
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - userId
+                properties:
+                  userId:
+                    type: string
+  /api/users/{userId}:
+    get:
+      tags:
+        - APIGateway
+      summary: Gets a user
+      description: ''
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: the id of the user
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - userId
+                  userName
+                  userSurname
+                properties:
+                  userId:
+                    type: string
+                  userName:
+                    type: string
+                  userSurname:
+                    type: string
+  /api/escooters:
+    post:
+      tags:
+        - APIGateway
+      summary: Create a new EScooter
+      description: ''
+      operationId: registerNewEScooter
+      parameters:
+        - name: escooterId
+          in: query
+          required: true
+          description: id of the escooter
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - escooterId
+                properties:
+                  escooterId:
+                    type: string
+  /api/escooters/{escooterId}:
+    get:
+      tags:
+        - APIGateway
+      summary: Gets an EScooter
+      description: ''
+      operationId: getEscooter
+      parameters:
+        - name: escooterId
+          in: path
+          required: true
+          description: the id of the escooter
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - escooterId
+                properties:
+                  escooterId:
+                    type: string
+  /api/rides:
+    post:
+      tags:
+        - APIGateway
+      summary: Create a new ride
+      description: ''
+      operationId: startNewRide
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: id of the user
+          schema:
+            type: string
+        - name: escooterId
+          in: query
+          required: true
+          description: id of the escooter
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - rideId
+                  userId
+                  escooterId
+                properties:
+                  rideId:
+                    type: string
+                  userId:
+                    type: string
+                  escooterId:
+                    type: string
+  /api/rides/{rideId}:
+    get:
+      tags:
+        - APIGateway
+      summary: Gets a ride
+      description: ''
+      operationId: getRide
+      parameters:
+        - name: rideId
+          in: path
+          required: true
+          description: the id of the ride
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - rideId
+                  userId
+                  escooterId
+                properties:
+                  rideId:
+                    type: string
+                  userId:
+                    type: string
+                  escooterId:
+                    type: string
+  /api/rides/{rideId}/end:
+    post:
+      tags:
+        - APIGateway
+      summary: End a ride
+      description: ''
+      operationId: endRide
+      parameters:
+        - name: rideId
+          in: path
+          required: true
+          description: the id of the ride
+          schema:
+            type: string
+      responses:
+        default:
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - rideId
+                properties:
+                  rideId:
+                    type: string
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
