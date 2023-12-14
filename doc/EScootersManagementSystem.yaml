@@ -239,7 +239,7 @@ paths:
         - APIGateway
       summary: Create a new user
       description: ''
-      operationId: registerNewUser
+      operationId: apiRegisterNewUser
       parameters:
         - name: userId
           in: query
@@ -277,7 +277,7 @@ paths:
         - APIGateway
       summary: Gets a user
       description: ''
-      operationId: getUser
+      operationId: apiGetUser
       parameters:
         - name: userId
           in: path
@@ -309,7 +309,7 @@ paths:
         - APIGateway
       summary: Create a new EScooter
       description: ''
-      operationId: registerNewEScooter
+      operationId: apiRegisterNewEScooter
       parameters:
         - name: escooterId
           in: query
@@ -335,7 +335,7 @@ paths:
         - APIGateway
       summary: Gets an EScooter
       description: ''
-      operationId: getEscooter
+      operationId: apiGetEscooter
       parameters:
         - name: escooterId
           in: path
@@ -361,7 +361,7 @@ paths:
         - APIGateway
       summary: Create a new ride
       description: ''
-      operationId: startNewRide
+      operationId: apiStartNewRide
       parameters:
         - name: userId
           in: query
@@ -399,7 +399,7 @@ paths:
         - APIGateway
       summary: Gets a ride
       description: ''
-      operationId: getRide
+      operationId: apiGetRide
       parameters:
         - name: rideId
           in: path
@@ -431,7 +431,7 @@ paths:
         - APIGateway
       summary: End a ride
       description: ''
-      operationId: endRide
+      operationId: apiEndRide
       parameters:
         - name: rideId
           in: path
