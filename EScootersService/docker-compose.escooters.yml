@@ -2,23 +2,33 @@ version: '3.9'
 services:
   escooters-db:
     image: mongo:latest
-    container_name: escooters-db:latest
+    container_name: escooters-db
     restart: always
     environment:
       MONGO_INITDB_DATABASE: escooters_db
     ports:
-      - "27019:27017"
+      - "27019:27017" # To get access without being inside the network
     volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./data/db:/data/db  
+    networks:
+      - escooters-network
 
   escooters-service:
     build:
       context: .
       dockerfile: Dockerfile  
-    container_name: escooters-service:latest
+    container_name: escooters-service
     depends_on:
-      - mongodb
+      - escooters-db
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/escooters_db
     volumes:
       - ./:app 
     ports:
       - "8082:8080"
+    networks:
+      - escooters-network
+
+networks:
+  escooters-network:
