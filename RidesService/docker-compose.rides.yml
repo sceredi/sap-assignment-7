@@ -2,23 +2,34 @@ version: '3.9'
 services:
   rides-db:
     image: mongo:latest
-    container_name: rides-db:latest
+    container_name: rides-db
     restart: always
     environment:
       MONGO_INITDB_DATABASE: rides_db
     ports:
       - "27020:27017"
     volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./data/db:/data/db  
+    networks:
+      - rides-network
 
   rides-service:
     build:
       context: .
       dockerfile: Dockerfile  
-    container_name: rides-service:latest
+    container_name: rides-service
     depends_on:
-      - mongodb
+      - rides-db
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/rides_db
     volumes:
       - ./:app 
     ports:
       - "8083:8080"
+    networks:
+      - rides-network
+
+networks:
+  rides-network:
+
