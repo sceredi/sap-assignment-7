@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  escooters-db:
+    image: mongo:latest
+    container_name: escooters-db:latest
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: escooters_db
+    ports:
+      - "27019:27017"
+    volumes:
+      - ./data/db:/data/db  
+
+  escooters-service:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    container_name: escooters-service:latest
+    depends_on:
+      - mongodb
+    volumes:
+      - ./:app 
+    ports:
+      - "8082:8080"
