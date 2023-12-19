@@ -1,6 +1,6 @@
-module EScootersService
+module escooters/service
 
-go 1.18
+go 1.21
 
 require (
 	github.com/golang/snappy v0.0.1 // indirect

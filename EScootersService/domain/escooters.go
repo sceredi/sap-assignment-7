@@ -1,10 +1,10 @@
 package EScooters
 
-
-type EScooters struct {
-    Id int `json:"id"`
+type EScooter struct {
+	ID string `bson:"_id,omitempty"`
+	Id int    `bson:"id"`
 }
 
-func New(Id int) *EScooters {
-    return &EScooters{Id: Id}
+func New(Id int) *EScooter {
+	return &EScooter{Id: Id}
 }

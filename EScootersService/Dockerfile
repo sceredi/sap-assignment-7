@@ -1,4 +1,4 @@
-FROM golang:1.19
+FROM golang:1.21
 
 # Set destination for COPY
 WORKDIR /app
@@ -7,12 +7,12 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY *.go ./
+COPY ./ ./
 
 # Build
-RUN go build -o /api-gateway
+RUN go build -o ./escooters-service
 
 EXPOSE 8080
 
 # Run
-CMD ["/api-gateway"]
+CMD ["./escooters-service"]
