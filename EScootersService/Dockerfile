@@ -1,20 +1,18 @@
-FROM openjdk:8-jdk-alpine
+FROM golang:1.19
 
+# Set destination for COPY
 WORKDIR /app
 
-RUN apk add --no-cache curl
+# Download Go modules
+COPY go.mod go.sum ./
+RUN go mod download
 
-COPY gradlew .
-COPY gradle gradle
+COPY *.go ./
 
-COPY build.gradle.kts .
-COPY settings.gradle.kts .
-
-COPY src .
-
-RUN ./gradlew build
+# Build
+RUN go build -o /api-gateway
 
 EXPOSE 8080
 
-CMD ["./gradlew", "run"]
-
+# Run
+CMD ["/api-gateway"]
