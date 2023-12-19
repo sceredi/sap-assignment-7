@@ -13,5 +13,5 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Static("/static", "assets")
-	e.Start(":8080")
+	e.Start(":3000")
 }
