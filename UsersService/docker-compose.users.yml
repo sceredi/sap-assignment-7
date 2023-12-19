@@ -2,23 +2,33 @@ version: '3.9'
 services:
   users-db:
     image: mongo:latest
-    container_name: users-db:latest
+    container_name: users-db
     restart: always
     environment:
       MONGO_INITDB_DATABASE: users_db
     ports:
       - "27018:27017"
     volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./data/db:/data/db  
+    networks:
+      - users-network
 
   users-service:
     build:
       context: .
       dockerfile: Dockerfile  
-    container_name: users-service:latest
+    container_name: users-service
     depends_on:
-      - mongodb
+      - users-db
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/users_db
     volumes:
       - ./:app 
     ports:
       - "8081:8080"
+    networks:
+      - users-network
+
+networks:
+  users-network:
