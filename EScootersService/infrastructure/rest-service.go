@@ -12,7 +12,7 @@ type RestService struct {
 }
 
 type Result struct {
-	Result string `json:"result"`
+	Result   string             `json:"result"`
 	EScooter EScooters.EScooter `json:"escooter"`
 }
 
@@ -42,11 +42,19 @@ func (r *RestService) registerRoutes() {
 }
 
 func registerNewEScooter(c echo.Context) error {
+	log.Println("Registering new escooter")
 	escooter := new(EScooters.EScooter)
 	if err := c.Bind(escooter); err != nil {
 		return err
 	}
-	panic("not implemented")
+	if escooter.Id == "" {
+		return c.String(400, "id is required")
+	}
+	err := repository.RegisterNewEScooter(escooter)
+	if err != nil {
+		return c.String(500, err.Error())
+	}
+	return c.JSON(200, Result{Result: "ok", EScooter: *escooter})
 }
 
 func getEscooter(c echo.Context) error {

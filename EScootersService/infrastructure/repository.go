@@ -46,3 +46,9 @@ func (r *Repository) GetEScooter(id string) (*domain.EScooter, error) {
 	log.Println(escooter)
 	return &escooter, nil
 }
+
+func (r *Repository) RegisterNewEScooter(escooter *domain.EScooter) error {
+	log.Println("Registering new escooter with id: " + escooter.Id)
+	_, err := r.collection.InsertOne(context.TODO(), escooter)
+	return err
+}
