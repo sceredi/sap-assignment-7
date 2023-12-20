@@ -17,7 +17,7 @@ type Repository struct {
 
 func NewRepository(connectionString string) (*Repository, error) {
 	clentOptions := options.Client().ApplyURI(connectionString)
-	client, err := mongo.Connect(context.Background(), clentOptions)
+	client, err := mongo.Connect(context.TODO(), clentOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -29,12 +29,12 @@ func NewRepository(connectionString string) (*Repository, error) {
 
 func (r *Repository) Close() {
 	log.Println("Closing connection to MongoDB")
-	r.client.Disconnect(context.Background())
+	r.client.Disconnect(context.TODO())
 }
 
 func (r *Repository) GetEScooter(id string) (*domain.EScooter, error) {
 	log.Println("Getting escooter with id: " + id)
-	result := r.collection.FindOne(context.Background(), bson.M{"id": id})
+	result := r.collection.FindOne(context.TODO(), bson.M{"_id": id})
 	log.Println("got something")
 	var escooter domain.EScooter
 	if err := result.Decode(&escooter); err != nil {

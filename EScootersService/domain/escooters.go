@@ -1,6 +1,6 @@
 package EScooters
 
 type EScooter struct {
-	Id int `bson:"_id" json:"id"`
+	Id string `bson:"_id" json:"id"`
 }
 
