@@ -24,11 +24,11 @@ func (r *RestService) Start() {
 }
 
 func (r *RestService) registerRoutes() {
-	r.server.POST("/escooter", createEscooter)
+	r.server.POST("/escooter", registerNewEScooter)
 	r.server.GET("/escooter/:id", getEscooter)
 }
 
-func createEscooter(c echo.Context) error {
+func registerNewEScooter(c echo.Context) error {
 	escooter := new(EScooters.EScooter)
 	if err := c.Bind(escooter); err != nil {
 		return err
