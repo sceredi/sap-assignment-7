@@ -27,8 +27,6 @@ services:
         condition: service_healthy
     environment:
       MONGO_URI: mongodb://users-db:27017/users_db
-    volumes:
-      - ./:app 
     ports:
       - "8081:8080"
     networks:

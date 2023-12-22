@@ -32,5 +32,5 @@ kotlin {
 }
 
 application {
-    mainClass.set("LauncherKt")
+    mainClass.set("MainKt")
 }
