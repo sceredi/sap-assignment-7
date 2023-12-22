@@ -1,7 +1,7 @@
 package infrastructure
 
 import (
-	EScooters "escooters/service/domain"
+	"escooters/service/domain"
 	"log"
 
 	"github.com/labstack/echo/v4"
@@ -9,24 +9,23 @@ import (
 
 type RestService struct {
 	server *echo.Echo
+	service domain.EScootersService
 }
 
 type Result struct {
-	Result   string             `json:"result"`
-	EScooter EScooters.EScooter `json:"escooter"`
+	Result   string          `json:"result"`
+	EScooter domain.EScooter `json:"escooter"`
 }
 
-var repository *Repository
-
-func NewRestService() *RestService {
+func NewRestService(service domain.EScootersService) *RestService {
 	return &RestService{
 		server: echo.New(),
+		service: service,
 	}
 }
 
-func (r *RestService) Start(repo *Repository) {
+func (r *RestService) Start() {
 	log.Println("Starting escooter microservice...")
-	repository = repo
 	r.registerRoutes()
 	r.server.Start(":8080")
 }
@@ -37,33 +36,33 @@ func (r *RestService) Stop() {
 }
 
 func (r *RestService) registerRoutes() {
-	r.server.POST("/escooters", registerNewEScooter)
-	r.server.GET("/escooters/:id", getEscooter)
+	r.server.POST("/escooters", r.registerNewEScooter)
+	r.server.GET("/escooters/:id", r.getEscooter)
 }
 
-func registerNewEScooter(c echo.Context) error {
+func (r *RestService) registerNewEScooter(c echo.Context) error {
 	log.Println("Registering new escooter")
-	escooter := new(EScooters.EScooter)
+	escooter := new(domain.EScooter)
 	if err := c.Bind(escooter); err != nil {
 		return err
 	}
 	if escooter.Id == "" {
 		return c.String(400, "id is required")
 	}
-	err := repository.RegisterNewEScooter(escooter)
+	escooter, err := r.service.RegisterNewEScooter(*escooter)
 	if err != nil {
 		return c.String(500, err.Error())
 	}
 	return c.JSON(200, Result{Result: "ok", EScooter: *escooter})
 }
 
-func getEscooter(c echo.Context) error {
+func (r *RestService) getEscooter(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return c.String(400, "id is required")
 	}
 	log.Println("Getting escooter with id: " + id)
-	escooter, err := repository.GetEScooter(id)
+	escooter, err := r.service.GetEScooter(id)
 	if err != nil {
 		return c.String(500, err.Error())
 	}

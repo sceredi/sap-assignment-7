@@ -10,7 +10,7 @@ RUN go mod download
 COPY ./ ./
 
 # Build
-RUN go build -o ./escooters-service
+RUN go build -o escooters-service ./app
 
 EXPOSE 8080
 

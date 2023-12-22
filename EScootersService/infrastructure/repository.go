@@ -2,7 +2,8 @@ package infrastructure
 
 import (
 	"context"
-	domain "escooters/service/domain"
+	"escooters/service/domain"
+
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -36,18 +37,18 @@ func (r *Repository) GetEScooter(id string) (*domain.EScooter, error) {
 	log.Println("Getting escooter with id: " + id)
 	result := r.collection.FindOne(context.TODO(), bson.M{"_id": id})
 	log.Println("got something")
-	var escooter domain.EScooter
-	if err := result.Decode(&escooter); err != nil {
+	var escooter *domain.EScooter
+	if err := result.Decode(escooter); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, nil
 		}
 		return nil, err
 	}
 	log.Println(escooter)
-	return &escooter, nil
+	return escooter, nil
 }
 
-func (r *Repository) RegisterNewEScooter(escooter *domain.EScooter) error {
+func (r *Repository) RegisterNewEScooter(escooter domain.EScooter) error {
 	log.Println("Registering new escooter with id: " + escooter.Id)
 	_, err := r.collection.InsertOne(context.TODO(), escooter)
 	return err
