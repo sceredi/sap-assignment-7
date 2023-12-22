@@ -8,11 +8,14 @@ services:
       MONGO_INITDB_DATABASE: users_db
     ports:
       - "27018:27017"
+      - "27017:27017"
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./data/db:/data/db  
     networks:
       - users-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
 
   users-service:
     build:
@@ -20,9 +23,10 @@ services:
       dockerfile: Dockerfile  
     container_name: users-service
     depends_on:
-      - users-db
+      users-db:
+        condition: service_healthy
     environment:
-      MONGO_URI: mongodb://mongodb:27017/users_db
+      MONGO_URI: mongodb://users-db:27017/users_db
     volumes:
       - ./:app 
     ports:
