@@ -4,12 +4,6 @@ WORKDIR /app
 
 RUN apk add --no-cache curl
 
-COPY gradlew .
-COPY gradle/ ./gradle/
-
-COPY build.gradle.kts .
-COPY settings.gradle.kts .
-
 COPY ./ .
 
 RUN ./gradlew build
