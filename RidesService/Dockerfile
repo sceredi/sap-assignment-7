@@ -1,20 +1,16 @@
-FROM golang:1.21
+FROM openjdk:8-jdk-alpine
 
-# Set the working directory to /app
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+RUN apk add --no-cache curl
 
-# Download dependencies using go modules
-RUN go mod download
+COPY ./ .
 
-# Build the Go app
-RUN go build -o api-gateway
+RUN ./gradlew build
 
-# Expose port 8080 to the outside world
 EXPOSE 8080
 
-# Command to run the executable
-CMD ["./rides-service"]
+CMD ["./gradlew", "run"]
+
+HEALTHCHECK --interval=30s --retries=5 CMD curl -f http://localhost:8080/users/health
 
