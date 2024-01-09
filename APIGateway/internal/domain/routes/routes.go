@@ -1,4 +1,4 @@
-package routes
+package domain
 
 type Config struct {
 	Routes []Route `yaml:"routes"`

@@ -1,11 +1,11 @@
-package routes
+package domain
 
 import (
 	"os"
 	"gopkg.in/yaml.v3"
 )
 
-func LoadRoutesConfig(filePath string)(*Config, error) {
+func LoadConfig(filePath string)(*Config, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err

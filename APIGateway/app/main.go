@@ -1,13 +1,13 @@
 package main
 
 import (
-	"api-gateway/routes"
+	Routes "api-gateway/internal/domain/routes"
 	"fmt"
 )
 
 func main() {
 	fmt.Print("Api Gateway")
-	config, err := routes.LoadRoutesConfig("routes.yaml")
+	config, err := Routes.LoadConfig("routes.yaml")
 	if err != nil {
 		fmt.Println("Error loading configuration:", err)
 		return
