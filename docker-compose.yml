@@ -5,48 +5,61 @@ services:
     extends:
       file:  EScootersManagementSystemDashboard/docker-compose.dashboard.yml
       service: dashboard-service
+    ports:
+      - "3000:3000"
+    networks:
+      - main-network
   api-gateway:
     extends:
       file: APIGateway/docker-compose.apigateway.yml
       service: api-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - main-network
   escooters-service:
     extends:
       file: EScootersService/docker-compose.escooters.yml
       service: escooters-service
+    ports:
+      - "8082:8080"
     networks:
       - escooters-network
+      - main-network
   escooters-db:
     extends:
       file: EScootersService/docker-compose.escooters.yml
       service: escooters-db
     networks:
       - escooters-network
-  users-service:
-    extends:
-      file: UsersService/docker-compose.users.yml
-      service: users-service
-    networks:
-      - users-network
-  users-db:
-    extends:
-      file: UsersService/docker-compose.users.yml
-      service: users-db
-    networks:
-      - users-network
-  rides-service:
-    extends:
-      file: RidesService/docker-compose.rides.yml
-      service: rides-service
-    networks:
-      - rides-network
-  rides-db:
-    extends:
-      file: RidesService/docker-compose.rides.yml
-      service: rides-db
-    networks:
-      - rides-network
+  # users-service:
+  #   extends:
+  #     file: UsersService/docker-compose.users.yml
+  #     service: users-service
+  #   networks:
+  #     - users-network
+  # users-db:
+  #   extends:
+  #     file: UsersService/docker-compose.users.yml
+  #     service: users-db
+  #   networks:
+  #     - users-network
+  # rides-service:
+  #   extends:
+  #     file: RidesService/docker-compose.rides.yml
+  #     service: rides-service
+  #   networks:
+  #     - rides-network
+  # rides-db:
+  #   extends:
+  #     file: RidesService/docker-compose.rides.yml
+  #     service: rides-db
+  #   networks:
+  #     - rides-network
 
 networks:
+  main-network:
   escooters-network:
   users-network:
   rides-network: 
+

@@ -6,7 +6,7 @@ type Config struct {
 
 type Route struct {
 	Method string `yaml:"method"`
-	Path   string `yaml:"path"`
+	Source   string `yaml:"source"`
 	Target string `yaml:"target"`
 }
 

@@ -1,8 +1,10 @@
 package main
 
 import (
-	Routes "api-gateway/internal/domain/routes"
 	"fmt"
+
+	Routes "api-gateway/internal/domain/routes"
+	Server "api-gateway/internal/infrastructure"
 )
 
 func main() {
@@ -13,4 +15,9 @@ func main() {
 		return
 	}
 	fmt.Printf("config: %v\n", config)
+
+	err = Server.Start(config)
+	if err != nil {
+		panic(err)
+	}
 }

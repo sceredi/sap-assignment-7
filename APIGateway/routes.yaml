@@ -1,5 +1,9 @@
 routes:
   - method: GET
-    path: /api/escooters/:escooterId
-    target: http://escooters-service:8082/escooters/escooterId
+    source: /api/escooters/:id
+    target: http://escooters-service:8080/escooters/
+
+  - method: POST
+    source: /api/escooters/
+    target: http://escooters-service:8080/escooters/
 
