@@ -8,12 +8,14 @@ services:
       MONGO_INITDB_DATABASE: escooters_db
     ports:
       - "27019:27017" # To get access without being inside the network
-      - "27017:27017"
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./data/db:/data/db  
     networks:
       - escooters-network
+    logging:
+      driver: "none"
+    command: mongod --quiet --logpath /dev/null 
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
 
@@ -31,6 +33,7 @@ services:
       - "8082:8080"
     networks:
       - escooters-network
+
 
 networks:
   escooters-network:

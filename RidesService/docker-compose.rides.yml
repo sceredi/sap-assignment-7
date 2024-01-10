@@ -8,12 +8,14 @@ services:
       MONGO_INITDB_DATABASE: rides_db
     ports:
       - "27020:27017"
-      - "27017:27017"
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./data/db:/data/db  
     networks:
       - rides-network
+    logging:
+      driver: "none"
+    command: mongod --quiet --logpath /dev/null 
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
 

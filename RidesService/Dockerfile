@@ -1,8 +1,6 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk
 
 WORKDIR /app
-
-RUN apk add --no-cache curl
 
 COPY ./ .
 

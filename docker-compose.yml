@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  dashboard:
+    extends:
+      file:  EScootersManagementSystemDashboard/docker-compose.dashboard.yml
+      service: dashboard-service
+  api-gateway:
+    extends:
+      file: APIGateway/docker-compose.apigateway.yml
+      service: api-gateway
+  escooters-service:
+    extends:
+      file: EScootersService/docker-compose.escooters.yml
+      service: escooters-service
+    networks:
+      - escooters-network
+  escooters-db:
+    extends:
+      file: EScootersService/docker-compose.escooters.yml
+      service: escooters-db
+    networks:
+      - escooters-network
+  users-service:
+    extends:
+      file: UsersService/docker-compose.users.yml
+      service: users-service
+    networks:
+      - users-network
+  users-db:
+    extends:
+      file: UsersService/docker-compose.users.yml
+      service: users-db
+    networks:
+      - users-network
+  rides-service:
+    extends:
+      file: RidesService/docker-compose.rides.yml
+      service: rides-service
+    networks:
+      - rides-network
+  rides-db:
+    extends:
+      file: RidesService/docker-compose.rides.yml
+      service: rides-db
+    networks:
+      - rides-network
+
+networks:
+  escooters-network:
+  users-network:
+  rides-network: 
