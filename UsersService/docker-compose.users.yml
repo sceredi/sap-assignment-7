@@ -13,6 +13,8 @@ services:
       - ./data/db:/data/db  
     networks:
       - users-network
+    logging:
+      driver: "none"
     command: mongod --quiet --logpath /dev/null 
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
