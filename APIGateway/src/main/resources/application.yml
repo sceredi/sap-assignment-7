@@ -1,0 +1,27 @@
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: escooters-api-post
+          uri: http://escooters-service:8080
+          predicates:
+            - Path=/api/escooters
+          filters:
+            - RewritePath=/api/escooters, /escooters
+        - id: escooters-api-get
+          uri: http://escooters-service:8080
+          predicates:
+            - Path=/api/escooters/**
+          filters:
+            - RewritePath=/api/escooters/(?<segment>.*), /escooters/$\{segment}
+
+server:
+  port: 8080
