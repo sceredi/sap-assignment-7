@@ -1,18 +1,13 @@
-FROM golang:1.21
+FROM openjdk
 
-# Set destination for COPY
 WORKDIR /app
 
-# Download Go modules
-COPY go.mod go.sum ./
-RUN go mod download
+COPY ./ .
 
-COPY ./ ./
-
-# Build
-RUN go build -o api-gateway ./app
+RUN ./gradlew build
 
 EXPOSE 8080
 
-# Run
-CMD ["./api-gateway"]
+CMD ["./gradlew", "run"]
+
+
