@@ -22,6 +22,30 @@ spring:
             - Path=/api/escooters/**
           filters:
             - RewritePath=/api/escooters/(?<segment>.*), /escooters/$\{segment}
+        - id: users-api-post
+          uri: http://users-service:8080
+          predicates:
+            - Path=/api/users
+          filters:
+            - RewritePath=/api/users, /users
+        - id: users-api-get
+          uri: http://users-service:8080
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - RewritePath=/api/users/(?<segment>.*), /users/$\{segment}
+        - id: rides-api-post
+          uri: http://rides-service:8080
+          predicates:
+            - Path=/api/rides
+          filters:
+            - RewritePath=/api/rides, /rides
+        - id: rides-api-get
+          uri: http://rides-service:8080
+          predicates:
+            - Path=/api/rides/**
+          filters:
+            - RewritePath=/api/rides/(?<segment>.*), /rides/$\{segment}
 
 server:
   port: 8080

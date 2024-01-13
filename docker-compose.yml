@@ -32,30 +32,32 @@ services:
       service: escooters-db
     networks:
       - escooters-network
-  # users-service:
-  #   extends:
-  #     file: UsersService/docker-compose.users.yml
-  #     service: users-service
-  #   networks:
-  #     - users-network
-  # users-db:
-  #   extends:
-  #     file: UsersService/docker-compose.users.yml
-  #     service: users-db
-  #   networks:
-  #     - users-network
-  # rides-service:
-  #   extends:
-  #     file: RidesService/docker-compose.rides.yml
-  #     service: rides-service
-  #   networks:
-  #     - rides-network
-  # rides-db:
-  #   extends:
-  #     file: RidesService/docker-compose.rides.yml
-  #     service: rides-db
-  #   networks:
-  #     - rides-network
+  users-service:
+    extends:
+      file: UsersService/docker-compose.users.yml
+      service: users-service
+    networks:
+      - users-network
+      - main-network
+  users-db:
+    extends:
+      file: UsersService/docker-compose.users.yml
+      service: users-db
+    networks:
+      - users-network
+  rides-service:
+    extends:
+      file: RidesService/docker-compose.rides.yml
+      service: rides-service
+    networks:
+      - rides-network
+      - main-network
+  rides-db:
+    extends:
+      file: RidesService/docker-compose.rides.yml
+      service: rides-db
+    networks:
+      - rides-network
 
 networks:
   main-network:
