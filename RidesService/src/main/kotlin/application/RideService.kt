@@ -4,6 +4,7 @@ import it.unibo.sap.application.exceptions.RideAlreadyEnded
 import it.unibo.sap.application.exceptions.RideNotFound
 import it.unibo.sap.domain.Ride
 import it.unibo.sap.domain.model.RideModel
+import it.unibo.sap.infrastructure.services.users.UsersRepository
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -19,6 +20,7 @@ interface RideService {
 class RideServiceImpl private constructor(
     override val rideModel: RideModel, override var rideDashboardPort: RideDashboardPort?
 ) : RideService {
+    val userRepository = UsersRepository()
     companion object {
         fun new(rideModel: RideModel) = RideServiceImpl(rideModel, null)
     }
@@ -32,6 +34,9 @@ class RideServiceImpl private constructor(
 
     override fun startNewRide(userId: String, escooterId: String): Result<Ride> {
         logger.log(Level.INFO, "Registering new ride")
+        if (!userRepository.userExists(userId)) {
+            return Result.failure(IllegalArgumentException("User with id $userId does not exist"))
+        }
         val ride = Ride(userId, escooterId)
         return rideModel.addNewRide(ride)
             .onSuccess { rideDashboardPort?.notifyOngoingRidesChanged(rideModel.getOngoingRides()) }

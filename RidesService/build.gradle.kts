@@ -15,6 +15,7 @@ dependencies {
     implementation("io.vertx:vertx-core:4.4.6")
     implementation("io.vertx:vertx-web:4.4.6")
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.11.0")
+    implementation("org.danilopianini:khttp:1.4.3")
 }
 
 tasks.test {
