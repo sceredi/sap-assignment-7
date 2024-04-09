@@ -16,12 +16,13 @@ interface UserHandler {
 }
 
 class UserHandlerImpl(override val userService: UserService) : UserHandler {
-    val logger: Logger = Logger.getLogger("[UserHandler]")
+    private val logger: Logger = Logger.getLogger("[UserHandler]")
     override fun registerNewUser(context: RoutingContext) {
         logger.log(Level.INFO, "New user registration request")
         context.body().asJsonObject()?.apply {
             logger.log(Level.INFO, encodePrettily())
             val _id: String? = getString("id")
+            logger.log(Level.INFO, _id)
             val _name: String? = getString("name")
             val _surname: String? = getString("surname")
             _id?.let { id ->
@@ -31,11 +32,12 @@ class UserHandlerImpl(override val userService: UserService) : UserHandler {
                     }
                 }
             }?.fold(onSuccess = { context.sendReply(JsonObject().put("result", "ok")) }, onFailure = { exception ->
+                logger.log(Level.INFO, "Got here: " + exception.message)
                 when (exception) {
                     UserAlreadyExists() -> context.sendReply(JsonObject().put("result", "user-id-already-exists"))
                     else -> context.sendReply(JsonObject().put("result", "error-saving-user"))
                 }
-            })
+            }) ?: context.sendReply(JsonObject().put("result", "ERROR: some-fields-were-null"))
         } ?: context.sendReply(JsonObject().put("result", "ERROR: some-fields-were-null"))
     }
 

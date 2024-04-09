@@ -1,10 +1,16 @@
-FROM openjdk
+FROM gradle:8.7.0-jdk17
 
 WORKDIR /app
 
-COPY ./ .
+COPY build.gradle.kts .
+COPY gradle.properties .
+
+COPY gradle gradle
+COPY gradlew .
 
 RUN ./gradlew build
+
+COPY src src
 
 EXPOSE 8080
 

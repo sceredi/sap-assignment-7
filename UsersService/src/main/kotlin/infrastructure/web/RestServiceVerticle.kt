@@ -48,7 +48,7 @@ class RestServiceVerticleImpl(
         }
 
         logger.log(
-            Level.INFO, "Service ready, listening on port $port"
+            Level.INFO, "Service ready again, listening on port $port"
         )
     }
 }
