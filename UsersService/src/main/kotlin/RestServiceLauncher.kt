@@ -2,7 +2,7 @@ import application.UserService
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.kotlin.client.coroutine.MongoClient
-import domain.*
+import domain.MongoUser
 import domain.model.UserModel
 import infrastructure.database.UserMongoRepository
 import infrastructure.web.RestService
@@ -12,12 +12,16 @@ import org.bson.codecs.UuidCodec
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.pojo.PojoCodecProvider
 
+/**
+ * Launches the REST service
+ */
 class RestServiceLauncher {
-
-
+    /**
+     * Generates everything needed then launches the REST service
+     */
     fun launch() {
         val port = 8080
-        val connectionString = ConnectionString(System.getenv("MONGO_URI")?:"mongodb://users-db:27017")
+        val connectionString = ConnectionString(System.getenv("MONGO_URI") ?: "mongodb://users-db:27017")
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .codecRegistry(

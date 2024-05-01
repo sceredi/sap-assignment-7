@@ -10,6 +10,7 @@ build/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -45,3 +46,4 @@ bin/
 
 ### Database data ###
 data
+kls_database.db

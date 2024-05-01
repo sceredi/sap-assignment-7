@@ -3,10 +3,22 @@ package domain.model
 import domain.User
 import infrastructure.database.UserRepository
 
+/**
+ * Represents the user model
+ */
 interface UserModel {
+    /**
+     * The database
+     */
     val databasePort: UserRepository
 
+    /**
+     * Adds a new user
+     */
     fun addNewUser(user: User): Result<User>
+    /**
+     * Gets a user by its id
+     */
     fun getUser(id: String): Result<User>
 }
 

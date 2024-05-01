@@ -11,7 +11,9 @@ import io.vertx.ext.web.handler.StaticHandler
 import java.util.logging.Level
 import java.util.logging.Logger
 
-
+/**
+ * Represents the REST service
+ */
 interface RestServiceVerticle {
     val port: Int
     val userHandler: UserHandler
@@ -26,6 +28,9 @@ class RestServiceVerticleImpl(
     private val logger = Logger.getLogger("[RestService]")
 
 
+    /**
+     * Initializes the REST service
+     */
     override fun start() {
         logger.log(Level.INFO, "Service initializing...")
         val server = vertx.createHttpServer()
@@ -53,6 +58,9 @@ class RestServiceVerticleImpl(
     }
 }
 
+/**
+ * Utility extension function that sends a reply to the client
+ */
 fun RoutingContext.sendReply(message: JsonObject) {
     this.response().putHeader("content-type", "application/json").end(message.toString())
 }
