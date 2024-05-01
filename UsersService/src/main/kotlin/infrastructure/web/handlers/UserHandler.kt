@@ -9,9 +9,23 @@ import io.vertx.ext.web.RoutingContext
 import java.util.logging.Level
 import java.util.logging.Logger
 
+/**
+ * Represents the user handler
+ */
 interface UserHandler {
+    /**
+     * User service to interact with the application
+     */
     val userService: UserService
+
+    /**
+     * Register a new user
+     */
     fun registerNewUser(context: RoutingContext)
+
+    /**
+     * Get a user by its id
+     */
     fun getUser(context: RoutingContext)
 }
 
@@ -61,6 +75,14 @@ class UserHandlerImpl(override val userService: UserService) : UserHandler {
     }
 }
 
+/**
+ * Factory function to create a UserHandler
+ * @param userService User service to interact with the application
+ * @return UserHandler
+ */
 fun UserHandler(userService: UserService) = UserHandlerImpl(userService)
 
+/**
+ * Converts a user to a JSON object
+ */
 fun User.toJson(): JsonObject = JsonObject().put("id", this.id).put("name", this.name).put("surname", this.surname)
