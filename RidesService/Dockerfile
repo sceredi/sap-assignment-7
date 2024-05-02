@@ -1,14 +1,20 @@
-FROM openjdk
+FROM gradle:8.7.0-jdk17
 
 WORKDIR /app
 
-COPY ./ .
+COPY build.gradle.kts .
+COPY gradle.properties .
 
-RUN ./gradlew build
+COPY gradle gradle
+COPY gradlew .
+
+RUN gradle build
+
+COPY src src
 
 EXPOSE 8080
 
-CMD ["./gradlew", "run"]
+CMD ["gradle", "run"]
 
-HEALTHCHECK --interval=30s --retries=5 CMD curl -f http://localhost:8080/users/health
+HEALTHCHECK --interval=30s --retries=5 CMD curl -f http://localhost:8080/rides/health
 
