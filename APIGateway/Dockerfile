@@ -1,8 +1,8 @@
-FROM openjdk:20-jdk-slim
+FROM gradle:8.7.0
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install findutils -y
+# RUN apt-get update && apt-get install findutils -y
 
 COPY ./ .
 
@@ -10,6 +10,6 @@ COPY ./ .
 
 EXPOSE 8080
 
-CMD ["./gradlew", "bootRun"]
+CMD ["gradle", "bootRun"]
 
 
