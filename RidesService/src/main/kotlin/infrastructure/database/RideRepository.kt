@@ -8,5 +8,4 @@ interface RideRepository {
     fun getNextRideId(): String
     fun getAllRides(): Sequence<Ride>
     fun updateRide(ride: Ride): Result<Ride>
-
 }

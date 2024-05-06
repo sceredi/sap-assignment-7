@@ -12,6 +12,8 @@ import java.util.logging.Logger
 interface RideService {
     val rideModel: RideModel
     var rideDashboardPort: RideDashboardPort?
+    val usersRepository: UsersRepository
+    val escotersRepository: EScootersRepository
     fun setRideDashboardPort(rideDashboardPort: RideDashboardPort): RideService
     fun startNewRide(userId: String, escooterId: String): Result<Ride>
     fun getRide(id: String): Result<Ride>
@@ -19,13 +21,10 @@ interface RideService {
 }
 
 class RideServiceImpl private constructor(
-    override val rideModel: RideModel, override var rideDashboardPort: RideDashboardPort?
+    override val rideModel: RideModel, override var rideDashboardPort: RideDashboardPort?, override val usersRepository: UsersRepository, override val escotersRepository: EScootersRepository
 ) : RideService {
-    private val usersRepository = UsersRepository()
-    private val escootersRepository = EScootersRepository()
-
     companion object {
-        fun new(rideModel: RideModel) = RideServiceImpl(rideModel, null)
+        fun new(rideModel: RideModel, userRepository: UsersRepository,  escotersRepository: EScootersRepository) = RideServiceImpl(rideModel, null, userRepository, escotersRepository)
     }
 
     val logger: Logger = Logger.getLogger("[RideService]")
@@ -37,7 +36,7 @@ class RideServiceImpl private constructor(
 
     override fun startNewRide(userId: String, escooterId: String): Result<Ride> {
         logger.log(Level.INFO, "Registering new ride")
-        if (!usersRepository.userExists(userId) || !escootersRepository.escooterExists(escooterId)) {
+        if (!this.usersRepository.userExists(userId) || !this.escotersRepository.escooterExists(escooterId)) {
             return Result.failure(IllegalArgumentException("Cannot start ride"))
         }
         val ride = Ride(userId, escooterId)
@@ -68,4 +67,4 @@ class RideServiceImpl private constructor(
 
 }
 
-fun RideService(rideModel: RideModel) = RideServiceImpl.new(rideModel)
+fun RideService(rideModel: RideModel, userRepository: UsersRepository = UsersRepository(), escotersRepository:  EScootersRepository = EScootersRepository()) = RideServiceImpl.new(rideModel, userRepository, escotersRepository)
