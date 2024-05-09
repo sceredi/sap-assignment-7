@@ -11,5 +11,4 @@ class RestService(
     fun init() {
         Vertx.vertx().apply { deployVerticle(RestServiceVerticle(port, rideHandler)) }
     }
-
 }

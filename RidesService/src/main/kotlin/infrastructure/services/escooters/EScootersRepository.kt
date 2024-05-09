@@ -2,7 +2,15 @@ package it.unibo.sap.infrastructure.services.escooters
 
 import org.json.JSONException
 
+/**
+ * Repository used to manage escooters.
+ */
 interface EScootersRepository {
+    /**
+     * Checks if an escooter exists.
+     * @param id the id of the escooter
+     * @return true if the escooter exists, false otherwise
+     */
     fun escooterExists(id: String): Boolean
 }
 
@@ -18,4 +26,8 @@ class EScootersRepositoryImpl : EScootersRepository {
     }
 }
 
+/**
+ * Creates a new escooters repository.
+ * @return the new escooters repository
+ */
 fun EScootersRepository(): EScootersRepository = EScootersRepositoryImpl()

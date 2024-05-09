@@ -9,22 +9,54 @@ import it.unibo.sap.infrastructure.services.users.UsersRepository
 import java.util.logging.Level
 import java.util.logging.Logger
 
+/**
+ * Ride service used to manage rides.
+ */
 interface RideService {
     val rideModel: RideModel
     var rideDashboardPort: RideDashboardPort?
     val usersRepository: UsersRepository
     val escotersRepository: EScootersRepository
+
+    /**
+     * Sets the ride dashboard port.
+     * @param rideDashboardPort the ride dashboard port
+     * @return the ride service with the ride dashboard port set
+     */
     fun setRideDashboardPort(rideDashboardPort: RideDashboardPort): RideService
+
+    /**
+     * Starts a new ride.
+     * @param userId the id of the user starting the ride
+     * @param escooterId the id of the escooter used for the ride
+     * @return the new ride or an exception if the user or the escooter do not exist
+     */
     fun startNewRide(userId: String, escooterId: String): Result<Ride>
+
+    /**
+     * Gets a ride by its id.
+     * @param id the id of the ride
+     * @return the ride or an exception if the ride is not found
+     */
     fun getRide(id: String): Result<Ride>
+
+    /**
+     * Ends a ride by its id.
+     * @param id the id of the ride
+     * @return the ended ride or an exception if the ride has already ended
+     */
     fun endRide(id: String): Result<Ride>
 }
 
 class RideServiceImpl private constructor(
-    override val rideModel: RideModel, override var rideDashboardPort: RideDashboardPort?, override val usersRepository: UsersRepository, override val escotersRepository: EScootersRepository
+    override val rideModel: RideModel,
+    override var rideDashboardPort: RideDashboardPort?,
+    override val usersRepository: UsersRepository,
+    override val escotersRepository: EScootersRepository
 ) : RideService {
     companion object {
-        fun new(rideModel: RideModel, userRepository: UsersRepository,  escotersRepository: EScootersRepository) = RideServiceImpl(rideModel, null, userRepository, escotersRepository)
+        fun new(rideModel: RideModel, userRepository: UsersRepository, escotersRepository: EScootersRepository) =
+            RideServiceImpl(rideModel, null, userRepository, escotersRepository)
     }
 
     val logger: Logger = Logger.getLogger("[RideService]")
@@ -60,11 +92,18 @@ class RideServiceImpl private constructor(
             } else {
                 Result.failure(RideAlreadyEnded())
             }
-        }
-
-        )
+        })
     }
-
 }
 
-fun RideService(rideModel: RideModel, userRepository: UsersRepository = UsersRepository(), escotersRepository:  EScootersRepository = EScootersRepository()) = RideServiceImpl.new(rideModel, userRepository, escotersRepository)
+/**
+ * Creates a new ride service.
+ * @param rideModel the ride model
+ * @param userRepository the users repository
+ * @param escotersRepository the escooters repository
+ */
+fun RideService(
+    rideModel: RideModel,
+    userRepository: UsersRepository = UsersRepository(),
+    escotersRepository: EScootersRepository = EScootersRepository()
+) = RideServiceImpl.new(rideModel, userRepository, escotersRepository)

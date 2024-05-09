@@ -11,7 +11,13 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.bson.types.ObjectId
 
+/**
+ * Ride repository used to manage rides in the mongodb database.
+ */
 interface RideMongoRepository : RideRepository {
+    /**
+     * The mongodb collection used to manage rides.
+     */
     val collection: MongoCollection<MongoRide>
 }
 
@@ -74,6 +80,15 @@ class RideMongoRepositoryImpl(override val collection: MongoCollection<MongoRide
     }
 }
 
+/**
+ * Converts a ride to a mongo ride.
+ * @return the mongo ride
+ */
 fun Ride.toMongoRide() = MongoRide(ObjectId(), id, userId, escooterId, startDate, endDate)
 
+/**
+ * Creates a new ride mongo repository.
+ * @param collection the mongodb collection used to manage rides
+ * @return the new ride mongo repository
+ */
 fun RideMongoRepository(collection: MongoCollection<MongoRide>) = RideMongoRepositoryImpl(collection)

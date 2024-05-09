@@ -1,20 +1,37 @@
 package it.unibo.sap.infrastructure.web.handlers
 
-import it.unibo.sap.application.RideService
-import it.unibo.sap.application.exceptions.RideAlreadyEnded
 import infrastructure.web.sendReply
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.RoutingContext
+import it.unibo.sap.application.RideService
+import it.unibo.sap.application.exceptions.RideAlreadyEnded
 import it.unibo.sap.domain.Ride
 import java.time.format.DateTimeFormatter
 import java.util.logging.Level
 import java.util.logging.Logger
 
+/**
+ * Handler for ride-related requests.
+ */
 interface RideHandler {
     val rideService: RideService
 
+    /**
+     * Starts a new ride.
+     * @param context the routing context
+     */
     fun startNewRide(context: RoutingContext)
+
+    /**
+     * Gets a ride by its id.
+     * @param context the routing context
+     */
     fun getRide(context: RoutingContext)
+
+    /**
+     * Ends a ride by its id.
+     * @param context the routing context
+     */
     fun endRide(context: RoutingContext)
 }
 
@@ -82,8 +99,17 @@ class RideHandlerImpl(override val rideService: RideService) : RideHandler {
     }
 }
 
+/**
+ * Creates a new ride handler.
+ * @param rideService the ride service used to manage rides
+ * @return the new ride handler
+ */
 fun RideHandler(rideService: RideService) = RideHandlerImpl(rideService)
 
+/**
+ * Converts a ride to a json object.
+ * @return the json object
+ */
 fun Ride.toJson() =
     JsonObject().put("id", this.id).put("userId", this.userId).put("escooterId", this.escooterId)
         .put("startDate", this.startDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))

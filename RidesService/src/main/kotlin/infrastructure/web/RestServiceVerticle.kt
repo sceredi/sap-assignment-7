@@ -14,10 +14,16 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 
+/**
+ * Verticle that manages the REST service.
+ */
 interface RestServiceVerticle {
     val port: Int
     val rideHandler: RideHandler
 
+    /**
+     * Starts the service.
+     */
     fun start()
 }
 
@@ -89,10 +95,20 @@ class RestServiceVerticleImpl(
 
 }
 
+/**
+ * Sends a reply to the client.
+ * @param message the message to send
+ */
 fun RoutingContext.sendReply(message: JsonObject) {
     this.response().putHeader("content-type", "application/json").end(message.toString())
 }
 
+/**
+ * Creates a new rest service verticle.
+ * @param port the port on which the service will listen
+ * @param rideHandler the ride handler used to manage rides
+ * @return the new rest service verticle
+ */
 fun RestServiceVerticle(
     port: Int,
     rideHandler: RideHandler,
