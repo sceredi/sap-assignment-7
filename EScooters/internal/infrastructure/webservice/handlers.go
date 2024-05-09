@@ -5,16 +5,19 @@ import (
 	"net/http"
 )
 
+// Loads the handlers for all the possible requests
 func loadHandlers(router *http.ServeMux) {
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 	})
+
 	router.HandleFunc("POST /escooters", func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte("Got a new POST request"))
 		if err != nil {
 			log.Printf("Error sending message to the client:\n%s\n", err)
 		}
 	})
+
 	router.HandleFunc("GET /escooters/{id}", func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		if id == "" {
