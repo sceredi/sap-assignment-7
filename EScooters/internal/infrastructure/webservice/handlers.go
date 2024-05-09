@@ -15,6 +15,7 @@ func loadHandlers(router *http.ServeMux) {
 		_, err := w.Write([]byte("Got a new POST request"))
 		if err != nil {
 			log.Printf("Error sending message to the client:\n%s\n", err)
+			return
 		}
 	})
 
