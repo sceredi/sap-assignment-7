@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -13,11 +14,15 @@ type DB struct {
 
 func NewMongoClient(connectionString string) (*mongo.Client, error) {
 	clentOptions := options.Client().ApplyURI(connectionString)
-	client, err := mongo.Connect(context.Background(), clentOptions)
+	client, err := mongo.Connect(context.TODO(), clentOptions)
 	if err != nil {
 		return nil, err
 	}
-	defer client.Disconnect(context.Background())
+	defer func() {
+		if err = client.Disconnect(context.TODO()); err != nil {
+			log.Panic(err)
+		}
+	}()
 	return client, nil
 }
 
