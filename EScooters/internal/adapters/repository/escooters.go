@@ -7,6 +7,7 @@ import (
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/core/domain"
 )
 
+// RegisterEScooter creates a new escooter instance on the database
 func (e *DB) RegisterEScooter(id string) (*domain.EScooter, error) {
 	escooter := domain.EScooter{
 		Id: id,
