@@ -23,17 +23,16 @@ func main() {
 	mongoAddr := os.Getenv("MONGO_URI")
 	db_name := "escooters_db"
 	collection := "escooters"
-	repo, err := repository.NewDB(mongoAddr, db_name, collection)
-	log.Printf("Connected to MongoDB at %s\n", mongoAddr)
+	repo, connOk := repository.NewDB(mongoAddr, db_name, collection)
+	if !connOk {
+		log.Panic("Cannot get escooters collection\n")
+	}
 	defer func() {
-		if err = repo.Client.Disconnect(context.TODO()); err != nil {
+		if err := repo.Client.Disconnect(context.TODO()); err != nil {
 			log.Panic(err)
 		}
 	}()
-
-	if err != nil {
-		log.Panicf("Cannot get escooters collection\n%s\n", err)
-	}
+	log.Printf("Connected to MongoDB at %s\n", mongoAddr)
 	log.Printf("Collection %s now available\n", collection)
 	escootersService := services.NewEScootersService(repo)
 	handler := handler.NewEScootersHandler(escootersService)

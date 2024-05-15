@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -34,6 +33,7 @@ func NewEScootersHandler(escootersService *services.EScootersService) *EScooters
 	}
 }
 
+// RegisterEScooter is the handler for the escooter registation request
 func (h *EScootersHandler) RegisterEScooter(w http.ResponseWriter, r *http.Request) {
 	type RequestBody struct {
 		EscooterId string `json:"escooterId"`
@@ -46,7 +46,7 @@ func (h *EScootersHandler) RegisterEScooter(w http.ResponseWriter, r *http.Reque
 		result := errorMsg{
 			Code: http.StatusBadRequest,
 			Msg: errorResultMsg{
-				Error: fmt.Sprintf("escootedId required\n%s\n", err),
+				Error: domain.ErrorNoGivenId,
 			},
 		}
 		renderError(w, result)
@@ -58,7 +58,7 @@ func (h *EScootersHandler) RegisterEScooter(w http.ResponseWriter, r *http.Reque
 		result := errorMsg{
 			Code: http.StatusPreconditionFailed,
 			Msg: errorResultMsg{
-				Error: fmt.Sprintf("Error occurred registering the escooter\n%s\n", err),
+				Error: err.Error(),
 			},
 		}
 		renderError(w, result)
@@ -71,13 +71,14 @@ func (h *EScootersHandler) RegisterEScooter(w http.ResponseWriter, r *http.Reque
 	renderJSON(w, response)
 }
 
+// GetEScooter is the handler for a get escooter request
 func (h *EScootersHandler) GetEScooter(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	if id == "" {
 		result := errorMsg{
 			Code: http.StatusBadRequest,
 			Msg: errorResultMsg{
-				Error: "Error: id path value is required",
+				Error: domain.ErrorNoGivenId,
 			},
 		}
 		renderError(w, result)
@@ -88,7 +89,7 @@ func (h *EScootersHandler) GetEScooter(w http.ResponseWriter, r *http.Request) {
 		result := errorMsg{
 			Code: http.StatusInternalServerError,
 			Msg: errorResultMsg{
-				Error: fmt.Sprintf("Error: %s", err),
+				Error: err.Error(),
 			},
 		}
 		renderError(w, result)
@@ -101,11 +102,12 @@ func (h *EScootersHandler) GetEScooter(w http.ResponseWriter, r *http.Request) {
 	renderJSON(w, response)
 }
 
+// NotFound renders a 404 message for any route that isn't currently available
 func (h *EScootersHandler) NotFound(w http.ResponseWriter, r *http.Request) {
 	result := errorMsg{
 		Code: 404,
 		Msg: errorResultMsg{
-			Error: "Error: endpoint not found",
+			Error: domain.ErrorEndpointNotFound,
 		},
 	}
 	renderError(w, result)
@@ -128,6 +130,7 @@ func renderJSON(w http.ResponseWriter, v interface{}) {
 	w.Write(js)
 }
 
+// renderError renders an error as JSON
 func renderError(w http.ResponseWriter, msg errorMsg) {
 	_, err := json.Marshal(msg.Msg)
 	if err != nil {

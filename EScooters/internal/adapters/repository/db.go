@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -15,24 +14,24 @@ type DB struct {
 }
 
 // NewDB creates the connection with the database at named name, and the given
-// collection
-func NewDB(connectionString, name, collection string) (*DB, error) {
+// collection, returns the DB and a bool, the bool is true if the connection is
+// ready, false otherwise
+func NewDB(connectionString, name, collection string) (*DB, bool) {
 	clentOptions := options.Client().ApplyURI(connectionString)
 	client, err := mongo.Connect(context.TODO(), clentOptions)
 	if err != nil || !ping(client) {
-		return nil, err
+		return nil, false
 	}
 	dbCollection := client.Database(name).Collection(collection)
 	db := &DB{
 		Client:     client,
 		Collection: dbCollection,
 	}
-	return db, nil
+	return db, true
 }
 
 func ping(client *mongo.Client) bool {
 	if err := client.Ping(context.TODO(), nil); err != nil {
-		log.Println("Database not connected")
 		return false
 	}
 	return true
