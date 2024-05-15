@@ -14,11 +14,13 @@ import (
 )
 
 func main() {
-	log.Println("Hello World!")
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	addr := fmt.Sprintf(":%s", port)
 	mongoAddr := os.Getenv("MONGO_URI")
 	db_name := "escooters_db"

@@ -1,6 +1,7 @@
 package webservice
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/adapters/handler"
@@ -18,5 +19,6 @@ func Serve(addr string, handler *handler.EScootersHandler) {
 		Addr:    addr,
 		Handler: stack(router),
 	}
+	log.Printf("Server listening on %s\n", server.Addr)
 	server.ListenAndServe()
 }
