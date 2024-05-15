@@ -1,1 +1,6 @@
-data
+.data
+
+bin/
+tmp/
+
+escooters-service

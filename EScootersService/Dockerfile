@@ -7,12 +7,15 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY ./ ./
+COPY ./cmd ./cmd
+COPY ./internal ./internal
 
 # Build
-RUN go build -o escooters-service ./app
+RUN go build -o escooters-service ./cmd
 
 EXPOSE 8080
 
 # Run
 CMD ["./escooters-service"]
+
+HEALTHCHECK --interval=30s --retries=5 CMD curl -f http://localhost:8080/health

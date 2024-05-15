@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   escooters-db:
     image: mongo:latest
@@ -10,7 +9,7 @@ services:
       - "27019:27017" # To get access without being inside the network
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ./data/db:/data/db  
+      - ./.data/db:/data/db  
     networks:
       - escooters-network
     logging:
@@ -29,8 +28,8 @@ services:
         condition: service_healthy
     environment:
       MONGO_URI: mongodb://escooters-db:27017/escooters_db
-    # ports:
-    #   - "8082:8080"
+    ports:
+      - "8082:8080"
     networks:
       - escooters-network
 
