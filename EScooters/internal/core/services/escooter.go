@@ -9,6 +9,12 @@ type EScootersService struct {
 	repo ports.EScooterRepository
 }
 
+func NewEScootersService(repo ports.EScooterRepository) *EScootersService {
+	return &EScootersService{
+		repo: repo,
+	}
+}
+
 func (s *EScootersService) RegisterEScooter(id string) (*domain.EScooter, error) {
 	return s.repo.RegisterEScooter(id)
 }
