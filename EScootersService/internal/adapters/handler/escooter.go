@@ -23,6 +23,7 @@ type errorResultMsg struct {
 	Error string `json:"error"`
 }
 
+// EScootersHandler is the handler for the escooter routes
 type EScootersHandler struct {
 	svc *services.EScootersService
 }

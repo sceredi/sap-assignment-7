@@ -19,6 +19,7 @@ func main() {
 	}
 	port := os.Getenv("PORT")
 	if port == "" {
+		// default port if not specified differently
 		port = "8080"
 	}
 	addr := fmt.Sprintf(":%s", port)
