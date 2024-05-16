@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   dashboard:
     extends:
@@ -21,6 +19,9 @@ services:
     extends:
       file: EScootersService/docker-compose.escooters.yml
       service: escooters-service
+    depends_on:
+      escooters-db:
+        condition: service_healthy
     ports:
       - "8082:8080"
     networks:
@@ -34,14 +35,17 @@ services:
       - escooters-network
   users-service:
     extends:
-      file: UsersService/docker-compose.users.yml
+      file: UsersService/docker-compose.users.yaml
       service: users-service
+    depends_on:
+      users-db:
+        condition: service_healthy
     networks:
       - users-network
       - main-network
   users-db:
     extends:
-      file: UsersService/docker-compose.users.yml
+      file: UsersService/docker-compose.users.yaml
       service: users-db
     networks:
       - users-network
@@ -49,6 +53,9 @@ services:
     extends:
       file: RidesService/docker-compose.rides.yml
       service: rides-service
+    depends_on:
+      rides-db:
+        condition: service_healthy
     networks:
       - rides-network
       - main-network
