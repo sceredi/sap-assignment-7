@@ -1,4 +1,4 @@
-FROM gradle:8.7.0-jdk17
+FROM gradle:8.7.0-jdk21
 
 WORKDIR /app
 
@@ -16,5 +16,5 @@ EXPOSE 8080
 
 CMD ["gradle", "run"]
 
-HEALTHCHECK --interval=30s --retries=5 CMD curl -f http://localhost:8080/users/health
+HEALTHCHECK --interval=30s --retries=5 CMD curl -f http://localhost:8080/health
 
