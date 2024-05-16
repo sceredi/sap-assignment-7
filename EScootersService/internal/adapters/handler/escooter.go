@@ -66,7 +66,7 @@ func (h *EScootersHandler) RegisterEScooter(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	response := okResultMsg{
-		Result:   "Ok",
+		Result:   "ok",
 		EScooter: *escooter,
 	}
 	renderJSON(w, response)
@@ -97,7 +97,7 @@ func (h *EScootersHandler) GetEScooter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response := okResultMsg{
-		Result:   "Ok",
+		Result:   "ok",
 		EScooter: *escooter,
 	}
 	renderJSON(w, response)
