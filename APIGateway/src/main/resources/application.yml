@@ -46,6 +46,13 @@ spring:
             - Path=/api/rides/**
           filters:
             - RewritePath=/api/rides/(?<segment>.*), /rides/$\{segment}
+        - id: rides-ws
+          uri: ws://rides-service:8080
+          predicates:
+            - Path=/api/rides/monitoring
+          filters:
+            - RewritePath=/api/rides/monitoring, /rides/monitoring
+
 
 server:
   port: 8080
