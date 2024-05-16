@@ -5,7 +5,13 @@ meta {
 }
 
 post {
-  url: 
-  body: none
+  url: http://127.0.0.1:8082/escooters
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "escooterId": "1"
+  }
 }
