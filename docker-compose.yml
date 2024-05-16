@@ -6,15 +6,18 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - main-network
+      - gateway-network
   api-gateway:
     extends:
       file: APIGateway/docker-compose.apigateway.yml
       service: api-gateway
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"
     networks:
-      - main-network
+      - gateway-network
+      - escooters-network
+      - users-network
+      - rides-network
   escooters-service:
     extends:
       file: EScootersService/docker-compose.escooters.yml
@@ -22,17 +25,17 @@ services:
     depends_on:
       escooters-db:
         condition: service_healthy
-    ports:
-      - "8082:8080"
+    # ports:
+    #   - "8082:8080"
     networks:
       - escooters-network
-      - main-network
+      - escooters-db-network
   escooters-db:
     extends:
       file: EScootersService/docker-compose.escooters.yml
       service: escooters-db
     networks:
-      - escooters-network
+      - escooters-db-network
   users-service:
     extends:
       file: UsersService/docker-compose.users.yaml
@@ -40,15 +43,17 @@ services:
     depends_on:
       users-db:
         condition: service_healthy
+    # ports:
+    #   - "8081:8080"
     networks:
       - users-network
-      - main-network
+      - users-db-network
   users-db:
     extends:
       file: UsersService/docker-compose.users.yaml
       service: users-db
     networks:
-      - users-network
+      - users-db-network
   rides-service:
     extends:
       file: RidesService/docker-compose.rides.yml
@@ -56,19 +61,24 @@ services:
     depends_on:
       rides-db:
         condition: service_healthy
+    # ports:
+    #   - "8083:8080"
     networks:
+      - rides-db-network
       - rides-network
-      - main-network
   rides-db:
     extends:
       file: RidesService/docker-compose.rides.yml
       service: rides-db
     networks:
-      - rides-network
+      - rides-db-network
 
 networks:
-  main-network:
+  gateway-network:
   escooters-network:
+  escooters-db-network:
   users-network:
+  users-db-network:
   rides-network: 
+  rides-db-network: 
 
