@@ -1,9 +1,11 @@
 package it.unibo.sap.infrastructure.database
 
-import it.unibo.sap.application.exceptions.RideNotFound
-import com.mongodb.client.model.*
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Projections
+import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoCollection
+import it.unibo.sap.application.exceptions.RideNotFound
 import it.unibo.sap.domain.MongoRide
 import it.unibo.sap.domain.Ride
 import kotlinx.coroutines.flow.firstOrNull
@@ -48,15 +50,10 @@ class RideMongoRepositoryImpl(override val collection: MongoCollection<MongoRide
     }
 
     override fun getNextRideId(): String = runBlocking {
-        collection.find()
-            .sort(Sorts.descending("id"))
-            .limit(1)
-            .projection(projectionFields)
-            .firstOrNull()?.let {
-                it.id?.substringAfterLast('-')?.toIntOrNull()?.let {
-                    "ride-${it + 1}"
-                }
-            } ?: "ride-1"
+        val id = collection.find().projection(projectionFields).toList()
+            .maxOfOrNull { it.id?.substringAfterLast('-')?.toIntOrNull() ?: 0 }?.let { it + 1 } ?: 1
+        println("YOOO NEXT ID IS $id")
+        "ride-$id"
     }
 
     override fun getAllRides(): Sequence<Ride> = runBlocking {

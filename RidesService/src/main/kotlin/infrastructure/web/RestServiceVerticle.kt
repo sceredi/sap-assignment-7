@@ -50,13 +50,16 @@ class RestServiceVerticleImpl(
             route(HttpMethod.POST, "/rides").handler(rideHandler::startNewRide)
             route(HttpMethod.GET, "/rides/:rideId").handler(rideHandler::getRide)
             route(HttpMethod.POST, "/rides/:rideId/end").handler(rideHandler::endRide)
+            route(HttpMethod.GET, "/health").handler { context: RoutingContext ->
+                context.response().end(JsonObject().put("status", "UP").toString())
+            }
         }
 
         server.apply {
             webSocketHandler { event ->
                 event?.let { webSocket ->
                     logger.log(Level.INFO, webSocket.path())
-                    if (webSocket.path() == "/api/rides/monitoring") {
+                    if (webSocket.path() == "/rides/monitoring") {
                         webSocket.accept()
                         logger.log(Level.INFO, "New ride monitoring observer registered")
                         vertx.eventBus().consumer("ride-events") { msg ->
@@ -81,10 +84,8 @@ class RestServiceVerticleImpl(
         logger.log(Level.INFO, "Service ready, listening on port $port")
     }
 
-    private fun createWebPageLink(name: String) = "http://localhost:$port/static/${name}.html"
-
     override fun notifyOngoingRidesChanged(ongoingRides: Sequence<Ride>) {
-        logger?.log(Level.INFO, "notify num rides changed")
+        logger.log(Level.INFO, "notify num rides changed")
         vertx.eventBus().apply {
             publish(
                 "ride-events",
