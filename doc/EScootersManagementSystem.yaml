@@ -3,8 +3,6 @@ info:
   title: EScootersManagementSystem microservices
   description: The api of the EScootersManagementSystem
   version: 0.1.0
-servers:
-  - url: http:localhost:8080
 tags:
   - name: APIGateway
     description: Operations about the API Gateway
@@ -49,10 +47,13 @@ paths:
               schema:
                 type: object
                 required:
-                - userId
+                - result
                 properties:
-                  userId:
+                  result:
                     type: string
+                    enum:
+                      - ok
+                      - error-saving-user
   /users/{userId}:
     get:
       tags:
@@ -69,22 +70,42 @@ paths:
             type: string
       responses:
         default:
-          description: successfull operation
+          description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                required:
-                - userId
-                  userName
-                  userSurname
-                properties:
-                  userId:
-                    type: string
-                  userName:
-                    type: string
-                  userSurname:
-                    type: string
+                oneOf:
+                  - type: object
+                    required:
+                      - result
+                      - user
+                    properties:
+                      result:
+                        type: string
+                        example: ok
+                      user:
+                        type: object
+                        required:
+                          - id
+                          - name
+                          - surname
+                        properties:
+                          id:
+                            type: string
+                            example: sceredi
+                          name:
+                            type: string
+                            example: Simone
+                          surname:
+                            type: string
+                            example: Ceredi
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: user-not-found
   /escooters:
     post:
       tags:
@@ -100,17 +121,39 @@ paths:
           schema:
             type: string
       responses:
-        default:
-          description: successfull operation
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
                 type: object
                 required:
-                - escooterId
+                  - result
+                  - escooter
                 properties:
-                  escooterId:
+                  result:
                     type: string
+                    example: ok
+                  escooter:
+                    type: object
+                    required:
+                      - id
+                    properties:
+                      id:
+                        type: string
+                        example: 123
+        '412':
+          description: precondition failed
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                properties:
+                  error:
+                    type: string
+                    example: EScooter with id 1 already exists
   /escooters/{escooterId}:
     get:
       tags:
@@ -126,17 +169,39 @@ paths:
           schema:
             type: string
       responses:
-        default:
-          description: successfull operation
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
                 type: object
                 required:
-                - escooterId
+                  - result
+                  - escooter
                 properties:
-                  escooterId:
+                  result:
                     type: string
+                    example: ok
+                  escooter:
+                    type: object
+                    required:
+                      - id
+                    properties:
+                      id:
+                        type: string
+                        example: 1
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                properties:
+                  error:
+                    type: string
+                    example: EScooter with id 1 not found
   /rides:
     post:
       tags:
@@ -159,22 +224,29 @@ paths:
             type: string
       responses:
         default:
-          description: successfull operation
+          description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                required:
-                - rideId
-                  userId
-                  escooterId
-                properties:
-                  rideId:
-                    type: string
-                  userId:
-                    type: string
-                  escooterId:
-                    type: string
+                oneOf:
+                  - type: object
+                    required:
+                      - result
+                      - rideId
+                    properties:
+                      result:
+                        type: string
+                        example: ok
+                      rideId:
+                        type: string
+                        example: ride-13
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: error-saving-ride
   /rides/{rideId}:
     get:
       tags:
@@ -191,22 +263,57 @@ paths:
             type: string
       responses:
         default:
-          description: successfull operation
+          description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                required:
-                - rideId
-                  userId
-                  escooterId
-                properties:
-                  rideId:
-                    type: string
-                  userId:
-                    type: string
-                  escooterId:
-                    type: string
+                oneOf:
+                  - type: object
+                    required:
+                      - result
+                      - ride
+                    properties:
+                      result:
+                        type: string
+                        example: ok
+                      ride:
+                        type: object
+                        required:
+                          - id
+                          - userId
+                          - escooterId
+                          - startDate
+                          - endDate
+                          - location
+                        properties:
+                          id:
+                            type: string
+                            example: ride-1
+                          userId:
+                            type: string
+                            example: sceredi
+                          escooterId:
+                            type: string
+                            example: escooter-01
+                          startDate:
+                            type: string
+                            format: date-time
+                            example: 2024-05-16T08:57:55.343
+                          endDate:
+                            type: string
+                            format: date-time
+                            example: 2024-05-16T08:57:55.343
+                          location:
+                            type: string
+                            nullable: true
+                            example: null
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: ride-not-found
   /rides/{rideId}/end:
     post:
       tags:
@@ -222,17 +329,26 @@ paths:
           schema:
             type: string
       responses:
-        default:
-          description: successfull operation
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                required:
-                - rideId
-                properties:
-                  rideId:
-                    type: string
+                oneOf:
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: ok
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: ride-not-found
   /api/users:
     post:
       tags:
@@ -267,10 +383,13 @@ paths:
               schema:
                 type: object
                 required:
-                - userId
+                - result
                 properties:
-                  userId:
+                  result:
                     type: string
+                    enum:
+                      - ok
+                      - error-saving-user
   /api/users/{userId}:
     get:
       tags:
@@ -287,22 +406,42 @@ paths:
             type: string
       responses:
         default:
-          description: successfull operation
+          description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                required:
-                - userId
-                  userName
-                  userSurname
-                properties:
-                  userId:
-                    type: string
-                  userName:
-                    type: string
-                  userSurname:
-                    type: string
+                oneOf:
+                  - type: object
+                    required:
+                      - result
+                      - user
+                    properties:
+                      result:
+                        type: string
+                        example: ok
+                      user:
+                        type: object
+                        required:
+                          - id
+                          - name
+                          - surname
+                        properties:
+                          id:
+                            type: string
+                            example: sceredi
+                          name:
+                            type: string
+                            example: Simone
+                          surname:
+                            type: string
+                            example: Ceredi
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: user-not-found
   /api/escooters:
     post:
       tags:
@@ -318,17 +457,39 @@ paths:
           schema:
             type: string
       responses:
-        default:
-          description: successfull operation
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
                 type: object
                 required:
-                - escooterId
+                  - result
+                  - escooter
                 properties:
-                  escooterId:
+                  result:
                     type: string
+                    example: ok
+                  escooter:
+                    type: object
+                    required:
+                      - id
+                    properties:
+                      id:
+                        type: string
+                        example: 123
+        '412':
+          description: precondition failed
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                properties:
+                  error:
+                    type: string
+                    example: EScooter with id 1 already exists
   /api/escooters/{escooterId}:
     get:
       tags:
@@ -344,17 +505,39 @@ paths:
           schema:
             type: string
       responses:
-        default:
-          description: successfull operation
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
                 type: object
                 required:
-                - escooterId
+                  - result
+                  - escooter
                 properties:
-                  escooterId:
+                  result:
                     type: string
+                    example: ok
+                  escooter:
+                    type: object
+                    required:
+                      - id
+                    properties:
+                      id:
+                        type: string
+                        example: 1
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                properties:
+                  error:
+                    type: string
+                    example: EScooter with id 1 not found
   /api/rides:
     post:
       tags:
@@ -377,22 +560,29 @@ paths:
             type: string
       responses:
         default:
-          description: successfull operation
+          description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                required:
-                - rideId
-                  userId
-                  escooterId
-                properties:
-                  rideId:
-                    type: string
-                  userId:
-                    type: string
-                  escooterId:
-                    type: string
+                oneOf:
+                  - type: object
+                    required:
+                      - result
+                      - rideId
+                    properties:
+                      result:
+                        type: string
+                        example: ok
+                      rideId:
+                        type: string
+                        example: ride-13
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: error-saving-ride
   /api/rides/{rideId}:
     get:
       tags:
@@ -409,22 +599,57 @@ paths:
             type: string
       responses:
         default:
-          description: successfull operation
+          description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                required:
-                - rideId
-                  userId
-                  escooterId
-                properties:
-                  rideId:
-                    type: string
-                  userId:
-                    type: string
-                  escooterId:
-                    type: string
+                oneOf:
+                  - type: object
+                    required:
+                      - result
+                      - ride
+                    properties:
+                      result:
+                        type: string
+                        example: ok
+                      ride:
+                        type: object
+                        required:
+                          - id
+                          - userId
+                          - escooterId
+                          - startDate
+                          - endDate
+                          - location
+                        properties:
+                          id:
+                            type: string
+                            example: ride-1
+                          userId:
+                            type: string
+                            example: sceredi
+                          escooterId:
+                            type: string
+                            example: escooter-01
+                          startDate:
+                            type: string
+                            format: date-time
+                            example: 2024-05-16T08:57:55.343
+                          endDate:
+                            type: string
+                            format: date-time
+                            example: 2024-05-16T08:57:55.343
+                          location:
+                            type: string
+                            nullable: true
+                            example: null
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: ride-not-found
   /api/rides/{rideId}/end:
     post:
       tags:
@@ -440,28 +665,23 @@ paths:
           schema:
             type: string
       responses:
-        default:
-          description: successfull operation
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                required:
-                - rideId
-                properties:
-                  rideId:
-                    type: string
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
+                oneOf:
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: ok
+                  - type: object
+                    required:
+                      - result
+                    properties:
+                      result:
+                        type: string
+                        example: ride-not-found
