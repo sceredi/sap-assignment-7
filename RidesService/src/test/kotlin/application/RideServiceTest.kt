@@ -42,13 +42,13 @@ class RideServiceTest : ShouldSpec({
         every { userExists("2") } returns false
     }
 
-    val escotersRepositoryMock = mockk<EScootersRepository> {
+    val escootersRepositoryMock = mockk<EScootersRepository> {
         every { escooterExists("1") } returns true
         every { escooterExists("2") } returns false
     }
 
     context("Having a RideService") {
-        val rideService = RideService(RideModel(repositoryMock), usersRepositoryMock, escotersRepositoryMock)
+        val rideService = RideService(RideModel(repositoryMock), usersRepositoryMock, escootersRepositoryMock)
 
         should("start a new ride") {
             rideService.startNewRide("1", "1").getOrNull() shouldBe goodNewRide
@@ -84,7 +84,7 @@ class RideServiceTest : ShouldSpec({
     }
 
     context("Having a RideService with a bad repository") {
-        val rideService = RideService(RideModel(badRepositoryMock), usersRepositoryMock, escotersRepositoryMock)
+        val rideService = RideService(RideModel(badRepositoryMock), usersRepositoryMock, escootersRepositoryMock)
 
         should("fail starting a new ride") {
             rideService.startNewRide("1", "1").exceptionOrNull() shouldBe MongoException(1, "error")
