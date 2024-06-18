@@ -77,7 +77,7 @@ func (h *EScootersHandler) GetEScooter(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	if id == "" {
 		result := errorMsg{
-			Code: http.StatusBadRequest,
+			Code: http.StatusNotFound,
 			Msg: errorResultMsg{
 				Error: domain.ErrorNoGivenId,
 			},
