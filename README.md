@@ -1,13 +1,28 @@
-# 5th assignment for the course of Software Architecture and Platforms 2023/2024
+# 7th assignment for the course of Software Architecture and Platforms 2023/2024
 ## Description
-The objective of the assignment is to develop a microservices-based architecture for the EScooters case study, eventually decomposing the monololith proposed in Assignment #3. The proposed solution:
+#### Software Architecture and Platforms - a.y. 2023-2024
+ 
+## Assignment #7 - 20231201 - Observable Microservices
+- **Description:** The objective of the assignment is to apply in practice some patterns for making production-ready microservices as seen in module-2.9, using the technologies discussed in [Lab-11-20231201](https://github.com/pslab-unibo/sap-2023-2024/blob/master/Labs/Lab-11-20231201/README.md). To this purpose:
 
-- should adopt at least 2 different technologies for implementing the microservices (e.g., some microservices can be implemented in Vert.x, others in Spring)
-- should consider and apply the microservices patterns that appear useful for the case study
-- should be properly described and documented
+	- Consider either the Cooperative Pixel Art example (Lab-07-20231027), or, alternatively, your own example/case/project that you developed or you are developing. The example includes a simple API Gateway that interacts with a PixelArtGrid service.
+	
+	- Extend the example by applying the following patterns:
+		- Health Check API
+		- Application metrics
+		- Distributed Tracing 
+		- Distributed Logging
+	
+	- Think about metrics that can be used for defining Quality Attribute Scenarios
 
-## Execution
-Run
+- **Deliverable**:  
+	- Github repo including a report and the source code, organised in a proper way 
+
+- **Remarks**
+	- This is a *mandatory* assignment for those who choose to do the practical part of the exam using assignments
+
+
+## How to run
 ``` 
 docker compose up
 ```
