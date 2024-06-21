@@ -18,4 +18,4 @@ EXPOSE 8080
 # Run
 CMD ["./escooters-service"]
 
-HEALTHCHECK --interval=30s --retries=5 CMD curl -f http://localhost:8080/health
+HEALTHCHECK --interval=30s --retries=3 CMD curl -f http://localhost:8080/health

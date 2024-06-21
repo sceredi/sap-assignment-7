@@ -8,13 +8,13 @@ COPY gradle.properties .
 COPY gradle gradle
 COPY gradlew .
 
-RUN gradle build
-
 COPY src src
+
+RUN gradle build
 
 EXPOSE 8080
 
 CMD ["gradle", "run"]
 
-HEALTHCHECK --interval=30s --retries=5 CMD curl -f http://localhost:8080/health
+HEALTHCHECK --interval=30s --retries=3 CMD curl -f http://localhost:8080/health
 

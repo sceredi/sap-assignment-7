@@ -53,6 +53,7 @@ class RestServiceVerticleImpl(
             route(HttpMethod.GET, "/health").handler { context: RoutingContext ->
                 context.response().end(JsonObject().put("status", "UP").toString())
             }
+            route(HttpMethod.POST, "/kill").handler(rideHandler::kill)
         }
 
         server.apply {

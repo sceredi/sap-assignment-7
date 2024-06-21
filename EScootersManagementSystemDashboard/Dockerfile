@@ -17,3 +17,6 @@ EXPOSE 3000
 
 # Run
 CMD ["/dashboard"]
+
+
+HEALTHCHECK --interval=30s --retries=3 CMD curl -f http://localhost:3000/health

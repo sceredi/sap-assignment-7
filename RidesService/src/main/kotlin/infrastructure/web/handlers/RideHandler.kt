@@ -9,6 +9,7 @@ import it.unibo.sap.domain.Ride
 import java.time.format.DateTimeFormatter
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlin.system.exitProcess
 
 /**
  * Handler for ride-related requests.
@@ -33,6 +34,12 @@ interface RideHandler {
      * @param context the routing context
      */
     fun endRide(context: RoutingContext)
+
+    /**
+     * Testing function that kills the service
+     * ONLY FOR TESTING PURPOSES
+     */
+    fun kill(context: RoutingContext)
 }
 
 class RideHandlerImpl(override val rideService: RideService) : RideHandler {
@@ -96,6 +103,10 @@ class RideHandlerImpl(override val rideService: RideService) : RideHandler {
                     JsonObject().put("result", "ERROR: some-fields-were-null")
                 )
         }
+    }
+
+    override fun kill(context: RoutingContext) {
+        exitProcess(1)
     }
 }
 

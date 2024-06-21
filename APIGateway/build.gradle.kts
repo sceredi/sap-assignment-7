@@ -20,6 +20,7 @@ extra["springCloudVersion"] = "2023.0.0"
 dependencies {
 	implementation("org.slf4j:slf4j-api")
 	implementation("org.springframework.cloud:spring-cloud-starter-gateway")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
 }
 
 dependencyManagement {

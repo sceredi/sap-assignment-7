@@ -8,6 +8,7 @@ import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.RoutingContext
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlin.system.exitProcess
 
 /**
  * Represents the user handler
@@ -27,6 +28,12 @@ interface UserHandler {
      * Get a user by its id
      */
     fun getUser(context: RoutingContext)
+
+
+    /**
+     * Kills the service, only used for testing
+     */
+    fun kill(context: RoutingContext)
 }
 
 class UserHandlerImpl(override val userService: UserService) : UserHandler {
@@ -72,6 +79,10 @@ class UserHandlerImpl(override val userService: UserService) : UserHandler {
                 JsonObject().put("result", "ERROR: some-fields-were-null")
             )
         }
+    }
+
+    override fun kill(context: RoutingContext) {
+        exitProcess(1)
     }
 }
 

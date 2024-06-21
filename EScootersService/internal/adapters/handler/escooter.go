@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/core/domain"
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/core/services"
@@ -101,6 +102,10 @@ func (h *EScootersHandler) GetEScooter(w http.ResponseWriter, r *http.Request) {
 		EScooter: *escooter,
 	}
 	renderJSON(w, response)
+}
+
+func (h *EScootersHandler) Kill(w http.ResponseWriter, r *http.Request) {
+	os.Exit(1)
 }
 
 // NotFound renders a 404 message for any route that isn't currently available

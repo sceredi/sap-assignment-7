@@ -1,15 +1,16 @@
-FROM gradle:8.7.0
+FROM gradle:8.7.0-jdk17
 
 WORKDIR /app
 
-# RUN apt-get update && apt-get install findutils -y
+COPY build.gradle.kts .
 
-COPY ./ .
+COPY gradle gradle
+COPY gradlew .
 
-# RUN ./gradlew assemble
+COPY src src
 
 EXPOSE 8080
 
 CMD ["gradle", "bootRun"]
 
-
+HEALTHCHECK --interval=30s --retries=3 CMD curl -f http://localhost:8080/health

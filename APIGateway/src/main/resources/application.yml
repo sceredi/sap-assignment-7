@@ -6,10 +6,31 @@ logging:
       springframework:
         cloud:
           gateway: TRACE
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, shutdown
+
 spring:
   cloud:
     gateway:
       routes:
+        - id: healthcheck
+          uri: http://localhost:8080
+          predicates:
+            - Path=/health
+          filters:
+            - RewritePath=/health, /actuator/health
+        - id: kill_service
+          uri: http://localhost:8080
+          predicates:
+            - Path=/kill
+          filters:
+            - RewritePath=/kill, /actuator/shutdown
         - id: escooters-api-post
           uri: http://escooters-service:8080
           predicates:

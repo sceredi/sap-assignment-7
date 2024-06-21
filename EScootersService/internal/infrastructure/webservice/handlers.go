@@ -16,5 +16,7 @@ func loadHandlers(router *http.ServeMux, handler *handler.EScootersHandler) {
 
 	router.HandleFunc("GET /escooters/{id}", handler.GetEScooter)
 
+	router.HandleFunc("POST /kill", handler.Kill)
+
 	router.HandleFunc("/", handler.NotFound)
 }
