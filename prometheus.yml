@@ -1,0 +1,31 @@
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: 
+        - 'localhost:9090'
+
+  - job_name: 'dashboard'
+    static_configs:
+      - targets: 
+        - 'dashboard:3000'
+
+  - job_name: 'api-gateway'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: 
+        - 'api-gateway:8080'
+
+  - job_name: 'escooters-service'
+    static_configs:
+      - targets: 
+        - 'escooters-service:8080'
+
+  - job_name: 'users-service'
+    static_configs:
+      - targets: 
+        - 'users-service:8080'
+
+  - job_name: 'rides-service'
+    static_configs:
+      - targets: 
+        - 'rides-service:8080'

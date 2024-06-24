@@ -21,6 +21,7 @@ dependencies {
 	implementation("org.slf4j:slf4j-api")
 	implementation("org.springframework.cloud:spring-cloud-starter-gateway")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("io.micrometer:micrometer-registry-prometheus:1.12.7")
 }
 
 dependencyManagement {

@@ -7,13 +7,17 @@ logging:
         cloud:
           gateway: TRACE
 management:
-  endpoint:
-    shutdown:
-      enabled: true
   endpoints:
     web:
       exposure:
-        include: health, shutdown
+        include: '*'
+  endpoint:
+    shutdown:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
 
 spring:
   cloud:

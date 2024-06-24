@@ -1,5 +1,8 @@
 services:
+
+
   dashboard:
+    container_name: dashboard
     extends:
       file:  EScootersManagementSystemDashboard/docker-compose.dashboard.yml
       service: dashboard-service
@@ -7,8 +10,12 @@ services:
       - "3000:3000"
     networks:
       - gateway-network
+      - monitoring
     restart: always
+
+
   api-gateway:
+    container_name: api-gateway
     extends:
       file: APIGateway/docker-compose.apigateway.yml
       service: api-gateway
@@ -18,7 +25,11 @@ services:
       - escooters-network
       - users-network
       - rides-network
+      - monitoring
+
+
   escooters-service:
+    container_name: escooters-service
     extends:
       file: EScootersService/docker-compose.escooters.yml
       service: escooters-service
@@ -29,14 +40,21 @@ services:
     networks:
       - escooters-network
       - escooters-db-network
+      - monitoring
+
   escooters-db:
+    container_name: escooters-db
     extends:
       file: EScootersService/docker-compose.escooters.yml
       service: escooters-db
     networks:
       - escooters-db-network
+      - monitoring
     restart: always
+
+
   users-service:
+    container_name: users-service
     extends:
       file: UsersService/docker-compose.users.yaml
       service: users-service
@@ -47,14 +65,21 @@ services:
     networks:
       - users-network
       - users-db-network
+      - monitoring
+
   users-db:
+    container_name: users-db
     extends:
       file: UsersService/docker-compose.users.yaml
       service: users-db
     restart: always
     networks:
       - users-db-network
+      - monitoring
+
+
   rides-service:
+    container_name: rides-service
     extends:
       file: RidesService/docker-compose.rides.yml
       service: rides-service
@@ -65,13 +90,39 @@ services:
     networks:
       - rides-db-network
       - rides-network
+      - monitoring
+
   rides-db:
+    container_name: rides-db
     extends:
       file: RidesService/docker-compose.rides.yml
       service: rides-db
     restart: always
     networks:
       - rides-db-network
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:10.4.4
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin # Set a password for the Grafana admin user
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - monitoring
 
 networks:
   gateway-network:
@@ -81,4 +132,7 @@ networks:
   users-db-network:
   rides-network: 
   rides-db-network: 
+  monitoring:
 
+volumes:
+  grafana-storage:
