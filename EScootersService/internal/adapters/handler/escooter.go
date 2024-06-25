@@ -2,12 +2,14 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/core/domain"
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/core/services"
+	"github.com/sceredi/sap-assignment-5/escooters-service/internal/middleware"
 )
 
 type okResultMsg struct {
@@ -106,6 +108,19 @@ func (h *EScootersHandler) GetEScooter(w http.ResponseWriter, r *http.Request) {
 
 func (h *EScootersHandler) Kill(w http.ResponseWriter, r *http.Request) {
 	os.Exit(1)
+}
+
+func (h *EScootersHandler) Metrics(w http.ResponseWriter, r *http.Request) {
+	metric := middleware.GetMetric()
+	help := fmt.Sprint("# HELP requests_total The total number of received requests")
+	msg_type := fmt.Sprint("# TYPE requests_total counter")
+	counter := fmt.Sprintf("requests_total %d", metric.Requests_total)
+	msg := fmt.Sprintf("%s\n%s\n%s\n", help, msg_type, counter)
+	w.Header().Set("Content-Type", "text/plain")
+	_, err := w.Write([]byte(msg))
+	if err != nil {
+		http.Error(w, "Unable to write the response", http.StatusInternalServerError)
+	}
 }
 
 // NotFound renders a 404 message for any route that isn't currently available

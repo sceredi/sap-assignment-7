@@ -14,6 +14,7 @@ func Serve(addr string, handler *handler.EScootersHandler) {
 	loadHandlers(router, handler)
 	stack := middleware.CreateStack(
 		middleware.Logging,
+		middleware.UpdateMetric,
 	)
 	server := http.Server{
 		Addr:    addr,
