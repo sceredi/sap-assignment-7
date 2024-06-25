@@ -37,6 +37,9 @@ class RestServiceVerticleImpl(
 
     private val logger = Logger.getLogger("[RestService]")
 
+    @Volatile
+    private var counter = 0
+
 
     override fun start() {
         logger.log(Level.INFO, "Service initializing...")
@@ -46,14 +49,21 @@ class RestServiceVerticleImpl(
         router.apply {
             route("/static/*").handler(StaticHandler.create().setCachingEnabled(false))
             route().handler(BodyHandler.create())
+            route().handler {
+                counter += 1
+                it.next()
+            }
+
 
             route(HttpMethod.POST, "/rides").handler(rideHandler::startNewRide)
             route(HttpMethod.GET, "/rides/:rideId").handler(rideHandler::getRide)
             route(HttpMethod.POST, "/rides/:rideId/end").handler(rideHandler::endRide)
             route(HttpMethod.GET, "/health").handler { context: RoutingContext ->
-                context.response().end(JsonObject().put("status", "UP").toString())
+                context.sendReply(JsonObject().put("status", "UP"))
             }
             route(HttpMethod.POST, "/kill").handler(rideHandler::kill)
+            route(HttpMethod.GET, "/metrics").handler { context -> rideHandler.metrics(context, counter) }
+
         }
 
         server.apply {
