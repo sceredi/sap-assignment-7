@@ -26,3 +26,18 @@
 ```
 docker compose up
 ```
+### Show dashboard page
+After all containers are healthy by connecting to [http://localhost:3000/static/ride-dashboard.html](http://localhost:3000/static/ride-dashboard.html) will show the dashboard page.
+
+### Setup Grafana
+In order to view the Prometheus metrics it is possible to connect to [http://loocalhost:3001](http://loocalhost:3001), after that a few steps have to be followed.
+
+- login with username `admin` and password `admin`
+- On the left hand side go to *Data sources*
+- Create a new prometheus dashboard
+  - Click *Build a dashboard*
+  - *Add visualization* and select *Prometheus*
+  - In the *Metric* field type *requests_total*
+  - By clicking run queries the graph should populate
+  - Save the dashboard
+
