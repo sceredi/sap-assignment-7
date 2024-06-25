@@ -34,6 +34,11 @@ interface UserHandler {
      * Kills the service, only used for testing
      */
     fun kill(context: RoutingContext)
+
+    /**
+     * Answers prometheus for the metrics
+     */
+    fun metrics(context: RoutingContext, counter: Int)
 }
 
 class UserHandlerImpl(override val userService: UserService) : UserHandler {
@@ -83,6 +88,15 @@ class UserHandlerImpl(override val userService: UserService) : UserHandler {
 
     override fun kill(context: RoutingContext) {
         exitProcess(1)
+    }
+
+    override fun metrics(context: RoutingContext, counter: Int) {
+        val ans = """
+            # HELP requests_total The total number of received requests
+            # TYPE requests_total counter
+            requests_total $counter
+        """.trimIndent()
+        context.response().putHeader("content-type", "text-plain").end(ans)
     }
 }
 

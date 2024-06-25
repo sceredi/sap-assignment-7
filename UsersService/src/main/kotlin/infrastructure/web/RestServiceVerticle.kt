@@ -27,6 +27,9 @@ class RestServiceVerticleImpl(
 
     private val logger = Logger.getLogger("[RestService]")
 
+    @Volatile
+    private var counter = 0
+
 
     /**
      * Initializes the REST service
@@ -39,13 +42,18 @@ class RestServiceVerticleImpl(
         router.apply {
             route("/static/*").handler(StaticHandler.create().setCachingEnabled(false))
             route().handler(BodyHandler.create())
+            route().handler {
+                counter += 1
+                it.next()
+            }
 
             route(HttpMethod.POST, "/users").handler(userHandler::registerNewUser)
             route(HttpMethod.GET, "/users/:userId").handler(userHandler::getUser)
             route(HttpMethod.GET, "/health").handler { context: RoutingContext ->
-                context.response().end(JsonObject().put("status", "UP").toString())
+                context.sendReply(JsonObject().put("status", "UP"))
             }
             route(HttpMethod.POST, "/kill").handler(userHandler::kill)
+            route(HttpMethod.GET, "/metrics").handler{ context -> userHandler.metrics(context, counter) }
         }
 
         server.apply {
