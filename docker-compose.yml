@@ -1,6 +1,5 @@
 services:
 
-
   dashboard:
     container_name: dashboard
     extends:
@@ -10,7 +9,6 @@ services:
       - "3000:3000"
     networks:
       - gateway-network
-      - monitoring
     restart: always
 
 
@@ -25,7 +23,6 @@ services:
       - escooters-network
       - users-network
       - rides-network
-      - monitoring
 
 
   escooters-service:
@@ -40,7 +37,6 @@ services:
     networks:
       - escooters-network
       - escooters-db-network
-      - monitoring
 
   escooters-db:
     container_name: escooters-db
@@ -49,7 +45,6 @@ services:
       service: escooters-db
     networks:
       - escooters-db-network
-      - monitoring
     restart: always
 
 
@@ -65,7 +60,6 @@ services:
     networks:
       - users-network
       - users-db-network
-      - monitoring
 
   users-db:
     container_name: users-db
@@ -75,7 +69,6 @@ services:
     restart: always
     networks:
       - users-db-network
-      - monitoring
 
 
   rides-service:
@@ -90,7 +83,6 @@ services:
     networks:
       - rides-db-network
       - rides-network
-      - monitoring
 
   rides-db:
     container_name: rides-db
@@ -100,7 +92,6 @@ services:
     restart: always
     networks:
       - rides-db-network
-      - monitoring
 
   prometheus:
     image: prom/prometheus:v2.53.0
@@ -110,7 +101,11 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - monitoring
+      - grafana-prom
+      - gateway-network
+      - escooters-network
+      - users-network
+      - rides-network
 
   grafana:
     image: grafana/grafana:10.4.4
@@ -123,7 +118,7 @@ services:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     networks:
-      - monitoring
+      - grafana-prom
 
 networks:
   gateway-network:
@@ -133,7 +128,7 @@ networks:
   users-db-network:
   rides-network: 
   rides-db-network: 
-  monitoring:
+  grafana-prom:
 
 volumes:
   grafana-storage:
