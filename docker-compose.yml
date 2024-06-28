@@ -9,6 +9,8 @@ services:
       - "3000:3000"
     networks:
       - gateway-network
+    volumes:
+      - logs:/app/logs
     restart: always
 
 
@@ -17,12 +19,14 @@ services:
     extends:
       file: APIGateway/docker-compose.apigateway.yml
       service: api-gateway
-    restart: always
     networks:
       - gateway-network
       - escooters-network
       - users-network
       - rides-network
+    volumes:
+      - logs:/app/logs
+    restart: always
 
 
   escooters-service:
@@ -33,10 +37,12 @@ services:
     depends_on:
       escooters-db:
         condition: service_healthy
-    restart: always
     networks:
       - escooters-network
       - escooters-db-network
+    volumes:
+      - logs:/app/logs
+    restart: always
 
   escooters-db:
     container_name: escooters-db
@@ -56,10 +62,12 @@ services:
     depends_on:
       users-db:
         condition: service_healthy
-    restart: always
     networks:
       - users-network
       - users-db-network
+    volumes:
+      - logs:/app/logs
+    restart: always
 
   users-db:
     container_name: users-db
@@ -79,10 +87,12 @@ services:
     depends_on:
       rides-db:
         condition: service_healthy
-    restart: always
     networks:
       - rides-db-network
       - rides-network
+    volumes:
+      - logs:/app/logs
+    restart: always
 
   rides-db:
     container_name: rides-db
@@ -120,6 +130,27 @@ services:
     networks:
       - grafana-prom
 
+  elk:
+    image: sebp/elk:8.13.4
+    ports:
+      - "5601:5601" # Kibana
+      - "9200:9200" # Elasticsearch
+      - "5044:5044" # Logstash
+    networks:
+      - elk
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.17.22
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - logs:/app/logs:ro
+    networks:
+      - elk
+    depends_on:
+      - elk
+
 networks:
   gateway-network:
   escooters-network:
@@ -129,6 +160,8 @@ networks:
   rides-network: 
   rides-db-network: 
   grafana-prom:
+  elk:
 
 volumes:
   grafana-storage:
+  logs:
