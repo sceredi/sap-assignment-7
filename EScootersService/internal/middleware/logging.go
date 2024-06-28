@@ -1,9 +1,12 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type wrappedWriter struct {
@@ -32,5 +35,6 @@ func Logging(next http.Handler) http.Handler {
 		next.ServeHTTP(wrapped, r)
 
 		log.Printf("%d %s %s %s", wrapped.stratusCode, r.Method, r.URL.Path, time.Since(start))
+		logrus.Info(fmt.Sprintf("%d %s %s %s", wrapped.stratusCode, r.Method, r.URL.Path, time.Since(start)))
 	})
 }
