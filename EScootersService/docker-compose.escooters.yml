@@ -9,7 +9,7 @@ services:
       - "27019:27017" # To get access without being inside the network
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ./.data/db:/data/db  
+      - ./.data/db:/data/db
     networks:
       - escooters-network
     logging:

@@ -7,8 +7,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY ./cmd ./cmd
-COPY ./internal ./internal
+COPY . .
 
 # Build
 RUN go build -o escooters-service ./cmd

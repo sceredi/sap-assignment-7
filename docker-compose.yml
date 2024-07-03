@@ -26,6 +26,7 @@ services:
     depends_on:
       - elasticsearch
 
+
   dashboard:
     container_name: dashboard
     extends:
@@ -62,6 +63,10 @@ services:
     networks:
       - escooters-network
       - escooters-db-network
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      LOG_FILE_PATH: /app/logs/escooters_service.log
     restart: always
 
   escooters-db:
@@ -148,7 +153,6 @@ services:
 
 
   elasticsearch:
-    container_name: elasticsearch
     build:
       context: elasticsearch/
       args:
@@ -173,8 +177,8 @@ services:
       - elk
     restart: unless-stopped
 
+
   logstash:
-    container_name: logstash
     build:
       context: logstash/
       args:
@@ -196,8 +200,8 @@ services:
       - elasticsearch
     restart: unless-stopped
 
+
   kibana:
-    container_name: kibana
     build:
       context: kibana/
       args:
@@ -216,14 +220,14 @@ services:
 
 
   filebeat:
-    container_name: filebeat
     build:
       context: extensions/filebeat/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
     # Run as 'root' instead of 'filebeat' (uid 1000) to allow reading
-    # 'docker.sock' and the host's filesystem.
-    user: root
+    # 'docker.sock' and the host's filesystem. Not needed as not accessing
+    # 'docker.sock'
+    user: filebeat
     command:
       # Log to stderr.
       - -e
@@ -232,15 +236,8 @@ services:
       # see: https://www.elastic.co/guide/en/beats/libbeat/current/config-file-permissions.html
       - --strict.perms=false
     volumes:
+      - ./logs:/app/logs
       - ./extensions/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro,Z
-      - type: bind
-        source: /var/lib/docker/containers
-        target: /var/lib/docker/containers
-        read_only: true
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
-        read_only: true
     environment:
       FILEBEAT_INTERNAL_PASSWORD: ${FILEBEAT_INTERNAL_PASSWORD:-}
       BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD:-}
@@ -248,6 +245,7 @@ services:
       - elk
     depends_on:
       - elasticsearch
+
 
 networks:
   gateway-network:
@@ -265,3 +263,4 @@ networks:
 volumes:
   grafana-storage:
   elasticsearch:
+  logs:

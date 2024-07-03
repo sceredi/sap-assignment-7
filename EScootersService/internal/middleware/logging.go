@@ -35,6 +35,6 @@ func Logging(next http.Handler) http.Handler {
 		next.ServeHTTP(wrapped, r)
 
 		log.Printf("%d %s %s %s", wrapped.stratusCode, r.Method, r.URL.Path, time.Since(start))
-		logrus.Info(fmt.Sprintf("%d %s %s %s", wrapped.stratusCode, r.Method, r.URL.Path, time.Since(start)))
+		logrus.Info(fmt.Sprintf("%d %s %s %s\n", wrapped.stratusCode, r.Method, r.URL.Path, time.Since(start)))
 	})
 }

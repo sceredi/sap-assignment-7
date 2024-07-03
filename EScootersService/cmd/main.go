@@ -17,16 +17,22 @@ import (
 func main() {
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 
-	logFile, err := os.OpenFile("escooters_service-json.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found")
+	}
+
+	logFilePath := os.Getenv("LOG_FILE_PATH")
+	if logFilePath == "" {
+		logFilePath = "./escooters_service.log"
+	}
+
+	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		logrus.Fatalf("Failed to log to file, using default stderr: %v", err)
 	}
 	logrus.SetOutput(logFile)
-	logrus.Info("Hello this is a log")
+	logrus.Info("Hello this is a log\n")
 
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found")
-	}
 	port := os.Getenv("PORT")
 	if port == "" {
 		// default port if not specified differently

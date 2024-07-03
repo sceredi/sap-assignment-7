@@ -4,3 +4,5 @@ bin/
 tmp/
 
 escooters-service
+
+logs/
