@@ -66,7 +66,7 @@ services:
     volumes:
       - ./logs:/app/logs
     environment:
-      LOG_FILE_PATH: /app/logs/escooters_service.log
+      LOG_FILE: /app/logs/escooters_service.log
     restart: always
 
   escooters-db:
@@ -87,6 +87,10 @@ services:
     depends_on:
       users-db:
         condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      LOG_FILE: /app/logs/users_service.log
     networks:
       - users-network
       - users-db-network

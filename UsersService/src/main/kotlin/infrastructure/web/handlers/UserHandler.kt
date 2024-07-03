@@ -4,10 +4,9 @@ import application.UserService
 import application.exceptions.UserAlreadyExists
 import domain.User
 import infrastructure.web.sendReply
+import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.RoutingContext
-import java.util.logging.Level
-import java.util.logging.Logger
 import kotlin.system.exitProcess
 
 /**
@@ -42,13 +41,13 @@ interface UserHandler {
 }
 
 class UserHandlerImpl(override val userService: UserService) : UserHandler {
-    private val logger: Logger = Logger.getLogger("[UserHandler]")
+    private val logger = LoggerFactory.getLogger(UserHandler::class.java)
     override fun registerNewUser(context: RoutingContext) {
-        logger.log(Level.INFO, "New user registration request")
+        logger.info("New user registration request")
         context.body().asJsonObject()?.apply {
-            logger.log(Level.INFO, encodePrettily())
+            logger.info(encodePrettily())
             val _id: String? = getString("id")
-            logger.log(Level.INFO, _id)
+            logger.info(_id)
             val _name: String? = getString("name")
             val _surname: String? = getString("surname")
             _id?.let { id ->
@@ -58,7 +57,6 @@ class UserHandlerImpl(override val userService: UserService) : UserHandler {
                     }
                 }
             }?.fold(onSuccess = { context.sendReply(JsonObject().put("result", "ok")) }, onFailure = { exception ->
-                logger.log(Level.INFO, "Got here: " + exception.message)
                 when (exception) {
                     UserAlreadyExists() -> context.sendReply(JsonObject().put("result", "user-id-already-exists"))
                     else -> context.sendReply(JsonObject().put("result", "error-saving-user"))
@@ -68,9 +66,9 @@ class UserHandlerImpl(override val userService: UserService) : UserHandler {
     }
 
     override fun getUser(context: RoutingContext) {
-        logger.log(Level.INFO, "Get user request")
+        logger.info("Get user request")
         context.apply {
-            logger.log(Level.INFO, currentRoute().path)
+            logger.info(currentRoute().path)
             val _id: String? = pathParam("userId")
             _id?.let {
                 userService.getUser(it)

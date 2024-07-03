@@ -3,8 +3,7 @@ package application
 import application.exceptions.UserAlreadyExists
 import domain.User
 import domain.model.UserModel
-import java.util.logging.Level
-import java.util.logging.Logger
+import io.vertx.core.impl.logging.LoggerFactory
 
 /**
  * Service to handle user operations
@@ -31,10 +30,10 @@ interface UserService {
 }
 
 class UserServiceImpl(override val userModel: UserModel) : UserService {
-    private val logger: Logger = Logger.getLogger("[UserService]")
+    private val logger = LoggerFactory.getLogger(UserService::class.java)
 
     override fun registerNewUser(id: String, name: String, surname: String): Result<User> {
-        logger.log(Level.INFO, "Registering new user")
+        logger.info("Registering new user")
         val user = User(id, name, surname)
         return getUser(id).fold(
             onFailure = {

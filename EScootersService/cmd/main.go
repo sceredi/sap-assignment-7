@@ -20,7 +20,7 @@ func main() {
 		log.Info("No .env file found")
 	}
 
-	logFilePath := os.Getenv("LOG_FILE_PATH")
+	logFilePath := os.Getenv("LOG_FILE")
 	if logFilePath == "" {
 		logFilePath = "./escooters_service.log"
 	}
