@@ -44,6 +44,10 @@ services:
     extends:
       file: APIGateway/docker-compose.apigateway.yml
       service: api-gateway
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      LOG_FILE: /app/logs/api-gateway_service.log
     networks:
       - gateway-network
       - escooters-network
