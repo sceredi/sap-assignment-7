@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -20,7 +20,7 @@ func GetMetric() Metrics {
 func UpdateMetric(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		metric.Requests_total += 1
-		log.Printf("Total requests: %d\n", GetMetric().Requests_total)
+		log.Infof("Total requests: %d\n", GetMetric().Requests_total)
 		next.ServeHTTP(w, r)
 	})
 

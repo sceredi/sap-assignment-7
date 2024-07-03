@@ -3,13 +3,13 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/core/domain"
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/core/services"
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/middleware"
+	log "github.com/sirupsen/logrus"
 )
 
 type okResultMsg struct {
@@ -56,7 +56,7 @@ func (h *EScootersHandler) RegisterEScooter(w http.ResponseWriter, r *http.Reque
 		renderError(w, result)
 		return
 	}
-	log.Printf("New register request, id: %s\n", rb.EscooterId)
+	log.Infof("New register request, id: %s\n", rb.EscooterId)
 	escooter, err := h.svc.RegisterEScooter(rb.EscooterId)
 	if err != nil {
 		result := errorMsg{
@@ -78,7 +78,9 @@ func (h *EScootersHandler) RegisterEScooter(w http.ResponseWriter, r *http.Reque
 // GetEScooter is the handler for a get escooter request
 func (h *EScootersHandler) GetEScooter(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
+	log.Info("New get request\n")
 	if id == "" {
+		log.Error("Get escooter request had null id")
 		result := errorMsg{
 			Code: http.StatusNotFound,
 			Msg: errorResultMsg{
