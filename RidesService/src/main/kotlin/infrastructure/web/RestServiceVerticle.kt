@@ -2,6 +2,7 @@ package infrastructure.web
 
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.http.HttpMethod
+import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
@@ -10,8 +11,6 @@ import io.vertx.ext.web.handler.StaticHandler
 import it.unibo.sap.application.RideDashboardPort
 import it.unibo.sap.domain.Ride
 import it.unibo.sap.infrastructure.web.handlers.RideHandler
-import java.util.logging.Level
-import java.util.logging.Logger
 
 
 /**
@@ -35,14 +34,14 @@ class RestServiceVerticleImpl(
         rideHandler.rideService.setRideDashboardPort(this)
     }
 
-    private val logger = Logger.getLogger("[RestService]")
+    private val logger = LoggerFactory.getLogger(RestServiceVerticle::class.java)
 
     @Volatile
     private var counter = 0
 
 
     override fun start() {
-        logger.log(Level.INFO, "Service initializing...")
+        logger.info("Service initializing...")
         val server = vertx.createHttpServer()
         val router = Router.router(vertx)
 
@@ -69,21 +68,21 @@ class RestServiceVerticleImpl(
         server.apply {
             webSocketHandler { event ->
                 event?.let { webSocket ->
-                    logger.log(Level.INFO, webSocket.path())
+                    logger.info(webSocket.path())
                     if (webSocket.path() == "/rides/monitoring") {
                         webSocket.accept()
-                        logger.log(Level.INFO, "New ride monitoring observer registered")
+                        logger.info("New ride monitoring observer registered")
                         vertx.eventBus().consumer("ride-events") { msg ->
                             msg.body()?.let { body ->
                                 JsonObject(body.toString()).let { jsonObject ->
-                                    logger.log(Level.INFO, "Changes in rides: ${jsonObject.encodePrettily()}")
+                                    logger.info("Changes in rides: ${jsonObject.encodePrettily()}")
                                     event.writeTextMessage(jsonObject.encodePrettily())
                                 }
                             }
                         }
                         notifyOngoingRidesChanged(rideHandler.rideService.rideModel.getOngoingRides())
                     } else {
-                        logger.log(Level.INFO, "Monitoring observer rejected")
+                        logger.info("Monitoring observer rejected")
                     }
                 }
             }
@@ -92,11 +91,11 @@ class RestServiceVerticleImpl(
             listen(port)
         }
 
-        logger.log(Level.INFO, "Service ready, listening on port $port")
+        logger.info("Service ready, listening on port $port")
     }
 
     override fun notifyOngoingRidesChanged(ongoingRides: Sequence<Ride>) {
-        logger.log(Level.INFO, "notify num rides changed")
+        logger.info("notify num rides changed")
         vertx.eventBus().apply {
             publish(
                 "ride-events",

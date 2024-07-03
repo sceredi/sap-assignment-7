@@ -1,13 +1,12 @@
 package it.unibo.sap.application
 
+import io.vertx.core.impl.logging.LoggerFactory
 import it.unibo.sap.application.exceptions.RideAlreadyEnded
 import it.unibo.sap.application.exceptions.RideNotFound
 import it.unibo.sap.domain.Ride
 import it.unibo.sap.domain.model.RideModel
 import it.unibo.sap.infrastructure.services.escooters.EScootersRepository
 import it.unibo.sap.infrastructure.services.users.UsersRepository
-import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * Ride service used to manage rides.
@@ -59,7 +58,7 @@ class RideServiceImpl private constructor(
             RideServiceImpl(rideModel, null, userRepository, escotersRepository)
     }
 
-    val logger: Logger = Logger.getLogger("[RideService]")
+    private val logger = LoggerFactory.getLogger(RideService::class.java)
 
     override fun setRideDashboardPort(rideDashboardPort: RideDashboardPort): RideService {
         this.rideDashboardPort = rideDashboardPort
@@ -67,7 +66,7 @@ class RideServiceImpl private constructor(
     }
 
     override fun startNewRide(userId: String, escooterId: String): Result<Ride> {
-        logger.log(Level.INFO, "Registering new ride")
+        logger.info("Registering new ride")
         if (!this.usersRepository.userExists(userId) || !this.escotersRepository.escooterExists(escooterId)) {
             return Result.failure(IllegalArgumentException("Cannot start ride"))
         }
@@ -77,14 +76,14 @@ class RideServiceImpl private constructor(
     }
 
     override fun getRide(id: String): Result<Ride> {
-        logger.log(Level.INFO, "Getting ride with id $id")
+        logger.info("Getting ride with id $id")
         return rideModel.getRide(id)
     }
 
     override fun endRide(id: String): Result<Ride> {
-        logger.log(Level.INFO, "Ending ride with id $id")
+        logger.info("Ending ride with id $id")
         return getRide(id).fold(onFailure = { Result.failure(RideNotFound()) }, onSuccess = {
-            logger.log(Level.INFO, "got the ride")
+            logger.info("got the ride")
             if (it.isOngoing) {
                 rideModel.endRide(it.end()).also {
                     rideDashboardPort?.notifyOngoingRidesChanged(rideModel.getOngoingRides())

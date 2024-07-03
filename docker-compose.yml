@@ -114,6 +114,10 @@ services:
     depends_on:
       rides-db:
         condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      LOG_FILE: /app/logs/rides_service.log
     networks:
       - rides-db-network
       - rides-network

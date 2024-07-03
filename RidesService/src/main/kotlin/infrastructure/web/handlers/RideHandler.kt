@@ -1,14 +1,13 @@
 package it.unibo.sap.infrastructure.web.handlers
 
 import infrastructure.web.sendReply
+import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.RoutingContext
 import it.unibo.sap.application.RideService
 import it.unibo.sap.application.exceptions.RideAlreadyEnded
 import it.unibo.sap.domain.Ride
 import java.time.format.DateTimeFormatter
-import java.util.logging.Level
-import java.util.logging.Logger
 import kotlin.system.exitProcess
 
 /**
@@ -48,12 +47,12 @@ interface RideHandler {
 }
 
 class RideHandlerImpl(override val rideService: RideService) : RideHandler {
-    val logger: Logger = Logger.getLogger("[RideHandler]")
+    private val logger = LoggerFactory.getLogger(RideHandler::class.java)
 
     override fun startNewRide(context: RoutingContext) {
-        logger.log(Level.INFO, "New ride registration request")
+        logger.info("New ride registration request")
         context.body().asJsonObject()?.apply {
-            logger.log(Level.INFO, encodePrettily())
+            logger.info(encodePrettily())
             val _userId: String? = getString("userId")
             val _escooterId: String? = getString("escooterId")
             _userId?.let { userId ->
@@ -68,9 +67,9 @@ class RideHandlerImpl(override val rideService: RideService) : RideHandler {
     }
 
     override fun getRide(context: RoutingContext) {
-        logger.log(Level.INFO, "Get ride request")
+        logger.info("Get ride request")
         context.apply {
-            logger.log(Level.INFO, currentRoute().path)
+            logger.info(currentRoute().path)
             val _id: String? = pathParam("rideId")
             _id?.let {
                 rideService.getRide(it)
@@ -87,9 +86,9 @@ class RideHandlerImpl(override val rideService: RideService) : RideHandler {
     }
 
     override fun endRide(context: RoutingContext) {
-        logger.log(Level.INFO, "End ride request")
+        logger.info("End ride request")
         context.apply {
-            logger.log(Level.INFO, currentRoute().path)
+            logger.info(currentRoute().path)
             val _id: String? = pathParam("rideId")
             _id?.let {
                 rideService.endRide(it)
@@ -115,7 +114,7 @@ class RideHandlerImpl(override val rideService: RideService) : RideHandler {
     }
 
     override fun metrics(context: RoutingContext, counter: Int) {
-        val msg =  """
+        val msg = """
             # HELP requests_total The total number of received requests
             # TYPE requests_total counter
             requests_total $counter
