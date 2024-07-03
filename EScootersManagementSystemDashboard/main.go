@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -33,7 +32,6 @@ func requestCounter(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 func main() {
-	fmt.Println("EScooters Frontend")
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
