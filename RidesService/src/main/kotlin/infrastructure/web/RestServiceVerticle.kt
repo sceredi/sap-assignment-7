@@ -57,9 +57,7 @@ class RestServiceVerticleImpl(
             route(HttpMethod.POST, "/rides").handler(rideHandler::startNewRide)
             route(HttpMethod.GET, "/rides/:rideId").handler(rideHandler::getRide)
             route(HttpMethod.POST, "/rides/:rideId/end").handler(rideHandler::endRide)
-            route(HttpMethod.GET, "/health").handler { context: RoutingContext ->
-                context.sendReply(JsonObject().put("status", "UP"))
-            }
+            route(HttpMethod.GET, "/health").handler(rideHandler::health)
             route(HttpMethod.POST, "/kill").handler(rideHandler::kill)
             route(HttpMethod.GET, "/metrics").handler { context -> rideHandler.metrics(context, counter) }
 

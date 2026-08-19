@@ -48,9 +48,7 @@ class RestServiceVerticleImpl(
 
             route(HttpMethod.POST, "/users").handler(userHandler::registerNewUser)
             route(HttpMethod.GET, "/users/:userId").handler(userHandler::getUser)
-            route(HttpMethod.GET, "/health").handler { context: RoutingContext ->
-                context.sendReply(JsonObject().put("status", "UP"))
-            }
+            route(HttpMethod.GET, "/health").handler(userHandler::health)
             route(HttpMethod.POST, "/kill").handler(userHandler::kill)
             route(HttpMethod.GET, "/metrics").handler { context -> userHandler.metrics(context, counter) }
         }

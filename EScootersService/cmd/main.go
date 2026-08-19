@@ -54,5 +54,5 @@ func main() {
 	escootersService := services.NewEScootersService(repo)
 	handler := handler.NewEScootersHandler(escootersService)
 
-	webservice.Serve(addr, handler)
+	webservice.Serve(addr, handler, repo)
 }

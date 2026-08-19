@@ -4,12 +4,17 @@ import (
 	"net/http"
 
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/adapters/handler"
+	"github.com/sceredi/sap-assignment-5/escooters-service/internal/adapters/repository"
 )
 
 // Loads the handlers for all the possible requests
-func loadHandlers(router *http.ServeMux, handler *handler.EScootersHandler) {
+func loadHandlers(router *http.ServeMux, handler *handler.EScootersHandler, db *repository.DB) {
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(200)
+		if !db.Ping() {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
 	})
 
 	router.HandleFunc("POST /escooters", handler.RegisterEScooter)

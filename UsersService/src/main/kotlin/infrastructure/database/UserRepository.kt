@@ -27,6 +27,12 @@ interface UserRepository {
      * @return Result<User>
      */
     fun getUser(userId: String): Result<User>
+
+    /**
+     * Checks whether the database is reachable
+     * @return true if the database is reachable, false otherwise
+     */
+    fun ping(): Boolean
 }
 
 /**
@@ -56,6 +62,10 @@ class UserMongoRepositoryImpl(override val collection: MongoCollection<MongoUser
         collection.find(eq(User::id.name, userId)).projection(projectionFields).firstOrNull()?.let {
             Result.success(it)
         } ?: Result.failure(UserNotFound())
+    }
+
+    override fun ping(): Boolean = runBlocking {
+        runCatching { collection.estimatedDocumentCount() }.isSuccess
     }
 }
 

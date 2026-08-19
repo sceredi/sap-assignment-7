@@ -38,4 +38,10 @@ interface RideRepository {
      * @return the updated ride or an exception if the ride could not be updated
      */
     fun updateRide(ride: Ride): Result<Ride>
+
+    /**
+     * Checks whether the underlying database is reachable.
+     * @return true if the database is reachable, false otherwise
+     */
+    fun ping(): Boolean
 }

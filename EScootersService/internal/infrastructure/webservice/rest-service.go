@@ -4,14 +4,15 @@ import (
 	"net/http"
 
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/adapters/handler"
+	"github.com/sceredi/sap-assignment-5/escooters-service/internal/adapters/repository"
 	"github.com/sceredi/sap-assignment-5/escooters-service/internal/middleware"
 	log "github.com/sirupsen/logrus"
 )
 
 // Starts the webserver on the given address
-func Serve(addr string, handler *handler.EScootersHandler) {
+func Serve(addr string, handler *handler.EScootersHandler, db *repository.DB) {
 	router := http.NewServeMux()
-	loadHandlers(router, handler)
+	loadHandlers(router, handler, db)
 	stack := middleware.CreateStack(
 		middleware.Logging,
 		middleware.UpdateMetric,

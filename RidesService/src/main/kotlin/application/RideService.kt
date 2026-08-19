@@ -45,6 +45,12 @@ interface RideService {
      * @return the ended ride or an exception if the ride has already ended
      */
     fun endRide(id: String): Result<Ride>
+
+    /**
+     * Checks whether the service's dependencies (e.g. the database) are reachable.
+     * @return true if healthy, false otherwise
+     */
+    fun isHealthy(): Boolean
 }
 
 class RideServiceImpl private constructor(
@@ -93,6 +99,8 @@ class RideServiceImpl private constructor(
             }
         })
     }
+
+    override fun isHealthy(): Boolean = rideModel.ping()
 }
 
 /**

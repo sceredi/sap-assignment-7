@@ -75,6 +75,10 @@ class RideMongoRepositoryImpl(override val collection: MongoCollection<MongoRide
             ride
         }
     }
+
+    override fun ping(): Boolean = runBlocking {
+        runCatching { collection.estimatedDocumentCount() }.isSuccess
+    }
 }
 
 /**

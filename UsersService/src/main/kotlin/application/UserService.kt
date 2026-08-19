@@ -27,6 +27,12 @@ interface UserService {
      * @return Result<User> with the user found
      */
     fun getUser(id: String): Result<User>
+
+    /**
+     * Checks whether the service's dependencies (e.g. the database) are reachable
+     * @return true if healthy, false otherwise
+     */
+    fun isHealthy(): Boolean
 }
 
 class UserServiceImpl(override val userModel: UserModel) : UserService {
@@ -50,6 +56,8 @@ class UserServiceImpl(override val userModel: UserModel) : UserService {
     }
 
     override fun getUser(id: String): Result<User> = userModel.getUser(id)
+
+    override fun isHealthy(): Boolean = userModel.ping()
 }
 
 /**

@@ -38,6 +38,12 @@ interface RideModel {
      * @return the ongoing rides
      */
     fun getOngoingRides(): Sequence<Ride>
+
+    /**
+     * Checks whether the underlying database is reachable.
+     * @return true if the database is reachable, false otherwise
+     */
+    fun ping(): Boolean
 }
 
 class RideModelImpl(override val databasePort: RideRepository) : RideModel {
@@ -46,6 +52,7 @@ class RideModelImpl(override val databasePort: RideRepository) : RideModel {
     override fun getRide(id: String): Result<Ride> = databasePort.getRide(id)
     override fun endRide(ride: Ride): Result<Ride> = databasePort.updateRide(ride)
     override fun getOngoingRides(): Sequence<Ride> = databasePort.getAllRides().filter { it.isOngoing }
+    override fun ping(): Boolean = databasePort.ping()
 }
 
 /**

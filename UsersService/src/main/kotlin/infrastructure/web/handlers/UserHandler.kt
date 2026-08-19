@@ -35,6 +35,11 @@ interface UserHandler {
     fun kill(context: RoutingContext)
 
     /**
+     * Reports the health of the service and its dependencies
+     */
+    fun health(context: RoutingContext)
+
+    /**
      * Answers prometheus for the metrics
      */
     fun metrics(context: RoutingContext, counter: Int)
@@ -86,6 +91,15 @@ class UserHandlerImpl(override val userService: UserService) : UserHandler {
 
     override fun kill(context: RoutingContext) {
         exitProcess(1)
+    }
+
+    override fun health(context: RoutingContext) {
+        if (userService.isHealthy()) {
+            context.sendReply(JsonObject().put("status", "UP"))
+        } else {
+            context.response().setStatusCode(503).putHeader("content-type", "application/json")
+                .end(JsonObject().put("status", "DOWN").toString())
+        }
     }
 
     override fun metrics(context: RoutingContext, counter: Int) {

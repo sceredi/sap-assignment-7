@@ -36,3 +36,9 @@ func ping(client *mongo.Client) bool {
 	}
 	return true
 }
+
+// Ping checks whether the connection to the underlying MongoDB instance is
+// still alive, it can be used to determine the health of the service
+func (db *DB) Ping() bool {
+	return ping(db.Client)
+}

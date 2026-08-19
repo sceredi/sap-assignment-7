@@ -20,12 +20,19 @@ interface UserModel {
      * Gets a user by its id
      */
     fun getUser(id: String): Result<User>
+
+    /**
+     * Checks whether the underlying database is reachable
+     */
+    fun ping(): Boolean
 }
 
 class UserModelImpl(override val databasePort: UserRepository) : UserModel {
     override fun addNewUser(user: User): Result<User> = databasePort.saveUser(user)
 
     override fun getUser(id: String): Result<User> = databasePort.getUser(id)
+
+    override fun ping(): Boolean = databasePort.ping()
 }
 
 /**
